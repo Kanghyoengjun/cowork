@@ -1,0 +1,18 @@
+SQL developer hr 예제 풀이
+
+--------Where 조건
+비교 - =,<>,<,<=,>=
+범위 - BETWEEN
+집합 - IN, NOT IN
+패턴 - LIKE
+NULL - IS NULL, IS NOT NULL
+복합조건 - AND, OR, NOT
+
+--------group 함수
+count - 행 개수를 셈    ex) count(salary)    (*)의 경우 null 값도 개수로 셈
+sum - 합계            null 제외하고 연산    
+avg - 평균                //
+max - 최댓값
+min - 최솟값
+stddev - 표준편차
+variance - 분산

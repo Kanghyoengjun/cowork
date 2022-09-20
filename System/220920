@@ -1,0 +1,158 @@
+캡슐화 vs 정보은닉
+*캡슐화 - 관련된 데이터(변수,상태)와 메소드(함수,행위)를 하나의 클래스 속에 포함시키는 메커니즘 -> 이해,관리가 용이.
+*정보은닉 - 외부에 어떤 서비스를 제공할 수 있는지만 명시하고 어떻게 구현되었는지는 제공하지않음 -> 한 클래스 내의 세부사항들을 숨기는 장치
+  ㄴ 객체에대한추상화,모듈의 독립성,유지보수성,확장성을 높여줌. 한 객체의 내부표현,세부알고리즘을 다른객체에 영향을주지않고 변경가능.
+*메시지 - 객체 사이의 상호작용 수단, 구성 -> 수신객체.함수이름(매개변수)
+
+circle mycircle = new circle();
+                     객체생성함수
+                        
+                     
+           JAVA 실습
+package에다 여러 클래스를 생성
+main은 controller 클래스에 생성
+
+
+
+
+
+-------calculator class
+package test1;
+public class calculator {
+
+	private int num1;
+	private int num2;
+	
+	//생성자
+	public calculator(int num1,int num2) 
+	{
+		this.num1=num1;
+		this.num2=num2;
+	}
+	public int add() 
+	{
+		return num1+num2;
+	}
+	public int sub() 
+	{
+		return num1-num2;
+	}
+	public int mul()
+	{
+		return num1*num2;
+	}
+	public int div() 
+	{
+		return num1/num2;
+	}
+}
+
+----Controller class
+package test1;
+public class Controller
+{
+	/*동적 객체 생성
+	calculator cal;
+	cal=new calculator(6,3);*/
+	public static void main(String[] args)
+	{
+		//객체 생성
+		calculator cal = new calculator(87,21);
+		
+		System.out.println("두수의 합 = "+cal.add());
+		System.out.println("두수의 차 = "+cal.sub());
+		System.out.println("두수의 곱 = "+cal.mul());
+		System.out.println("두수의 몫 = "+cal.div());
+	}
+}
+
+-------Student class
+public class student {
+		private String name;
+		private int age;
+		private String phone;
+		
+		public student(String name,int age,String phone) {
+			this.name=name;
+			this.age=age;
+			this.phone=phone;
+		}
+		
+		public String getName(){
+			return name;
+		}
+		public int getAge(){
+			return age;
+		}
+		public String getPhone(){
+			return phone;
+		}
+		public String setName(String name){
+			this.name=name;
+			return name;
+		}
+		public String setPhone(String phone){
+			 this.phone = phone;
+			 return phone;
+
+public class Controller {
+
+	public static void main(String[] args) {
+		Product p1 = new Product();
+		
+		System.out.println("ProductID 추가 : " + p1.addProduct("HJ1234"));
+		System.out.println("ProductID 제거, 제거여부 : " + p1.deleteProduct("HJ1234"));
+
+	}
+
+}
+
+
+public class Product {
+
+	private String productId;
+	private int price = 0;
+	
+	
+	public String addProduct(String productId) {
+		this.productId=productId;
+		return productId;
+	}
+	public boolean deleteProduct(String productId) {
+		this.productId=productId;
+		return true;
+	}
+	private boolean checkProduct(String productId) {
+		this.productId=productId;
+		return false;
+	}
+}
+
+
+public class User {
+
+	public String id;
+	public String pw;
+	public String name;
+	
+	public void add(String id, String pw, String name) {
+		
+	}
+	public boolean delete(String id, String pw) {
+		this.id=id;
+		this.pw=pw;
+		return false;
+	}
+	public boolean update(String id, String pw, String name) {
+		this.id=id;
+		this.pw=pw;
+		this.name=name;
+		return true;
+	}
+	public void list() {
+		
+	}
+}
+
+		}
+}

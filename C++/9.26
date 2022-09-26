@@ -1,0 +1,106 @@
+visual studio
+
+windows 데스크톱 마법사
+mfc헤더
+--------------------------------------------
+class CTest
+{
+public:
+    int x;
+    void show(int x);
+};
+void CTest::show(int x) 
+{
+    cout << x << endl;
+}
+
+class CTestb      
+{
+public:
+    CTestb() {};
+    CTestb(CTest* cs)       *포인터 사용
+    {
+        
+    };
+    ~CTestb() {};
+};
+
+void main{
+            int x = 200,y=300;
+            CTest ct,*ctp;
+            ct.show(x);
+            ctp = &ct;
+            ctp->show(x);
+            CTestb b(ctp);
+
+            CString str;
+            str = "Unity";
+            _tprintf(_T("no korean %s \n"), LPCTSTR(str));
+        }
+ ----------------------------------------------------------------------
+ mfc앱
+단일문서,mfc standard,문서/뷰 아키텍처 지원 - doc.cpp
+고급기능 체크해제
+
+ 리소스 파일 -이미지수정
+ 소스 파일 - view 코드수
+ 헤더 파일
+ 
+다중문서,visual studio
+
+ lpszClass
+중간까지는 단일문서작업 -> 이후는 대화상자
+-----------------------------------------------------------------------
+MFC - microsoft foundation class
+
+이벤트 사건
+
+모든클래스는 C로 시작
+멤버변수는 m_를 붙여 구분
+전역함수에는 Afx를 붙임
+
+-----------------------------------------------------------------------
+---view.cpp---
+
+BOOL CProject0926View::PreCreateWindow(CREATESTRUCT& cs)
+cs.lpszClass=L"edit";                      -> 글자를 쓸때
+
+void CProject0926View::OnDraw(CDC* pDC)     	// CDC: Device context :배경장치
+pDC->TextOutW(0, 20, L"TextOut",5);						// (열,행,L"문자",출력할 글자 수)
+pDC->TextOutW(1, 35, L"CDC");
+CRect rt;											            		//사각형
+rt.left = 100;		// x1
+rt.top = 100;		// y1
+rt.right = 300;		// x2
+rt.bottom = 200;		// y2
+pDC->DrawText(L"MFC DrawText \nStart", &rt, DT_CENTER | DT_VCENTER);			    // 수직정렬,수평정렬
+int x =MessageBox(_T("MFC 메시지 창"),_T("상태창"),MB_YESNO+MB_DEFBUTTON2);    // 메시지창 띄우기,예 아니오,디폴트=아니오
+	if (x == IDYES)                                                             // 예 = Yes 출력 else NO 출력
+		pDC->TextOutW(200, 200,L"Yes");
+	else
+		pDC->TextOutW(200, 200, L"NO");
+
+
+---수업내용확인과제
+CRect rt;
+rt.left = 400;
+rt.top = 200;
+rt.right = 700;
+rt.bottom = 500;
+pDC->DrawText(L"이름:강형준\n학번:201904026\n학과:소프트웨어공학 2C반", &rt, DT_VCENTER);
+int m = MessageBox(_T("END?"),_T("201904026강형준"), MB_YESNO + MB_DEFBUTTON1);
+if (m == IDYES)
+		pDC->TextOut(400, 50, L"집으로");
+else
+		pDC->TextOut(400, 50, L"집에갈수없습니다");
+
+
+---doc.cpp---
+void CProject0926Doc::Serialize(CArchive& ar)
+if (ar.IsStoring())
+	{
+		// TODO: 여기에 저장 코드를 추가합니다.
+		ar << "test";                           -> 저장할때
+	}
+  
+  

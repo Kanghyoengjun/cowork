@@ -1,0 +1,63 @@
+단일행 함수
+문자 함수
+LOWER,UPPER - 값을 소,대문자로 변환          LOWER('ABCD') -> abcd
+SUBSTR - 문자열 중 일부분 선택               SUBSTR('ABCDEFG',1,4) -> ABCD
+REPLACE - 특정 문자열을 바꿈
+LENGTH
+INSTR                                       instr(hire_date,'/',1,2) -> 2번째 / 의 위치
+L,RPAD
+L,RTRIM
+
+-숫자 함수
+ROUND - 반올림, 0이 소수점 첫째 자리
+TRUNC - 절삭, 0이 소수점 첫째 자리
+MOD - 나누기 후 나머지를 구함
+CEIL - 정수로 올림
+FLOOR - 정수로 내림
+SIGN - 양수(1),음수(-1),0인지를 구분하여 출력
+POWER - 거듭제곱 출력                               POWER(2,3) -> 8
+SQRT - 제곱근 출력
+
+
+sysdate - 오늘날짜        select sysdate,sysdate+1,sysdate-1,sysdate - to_date('20220901'),sysdate+13/24 from dual;
+-날짜 함수
+MONTHS-BETWEEN - 두 날짜 사이의 월수를 계산
+ADD_MONTHS - 월을 날짜에 더함
+NEXT_DAY - 명시된 날짜부터 돌아오는 요일에 대한 날짜 출력
+LAST_DAY - 월의 마지막 날을 계산
+ROUND - 날짜를 가장 가까운 연도 또는 월로 반올림
+TRUNC- // 절삭
+
+select employee_id,hire_date,add_months(hire_date,3),add_months(hire_date,-3)
+from employees
+where employee_id between 100 and 106;
+
+select employee_id,hire_date,next_day(hire_date,6),next_day(hire_date,'금요일')
+from employees
+where employee_id between 100 and 106;
+
+select employee_id,hire_date,last_day(hire_date)
+from employees
+where employee_id between 100 and 106;
+
+-변환 함수
+TO_CHAR - 숫자데이터 or 날짜데이터 를 문자데이터로 변환
+TO_NUMBER - 문자를 숫자로 변환
+TO_DATE - 문자를 날짜로 변환
+
+// 년도  년도2    월  월2    오늘날짜1  '20220927'날짜
+-- 22	  2022	   09  9월 	 20220926	   20220927
+select to_char(sysdate,'yy') 년도,to_char(sysdate,'yyyy') 년도2,
+        to_char(sysdate,'mm') 월,to_char(sysdate,'mon') 월2,
+        to_char(sysdate,'yyyymmdd') 오늘날짜1,to_char(to_date('20220927','yyyymmdd'),'yyyymmdd') "'20220927'날짜"
+from dual;
+
+// 01:30:26 오후	          2022/09/26 01:30:26 오후
+select sysdate,to_char(sysdate,'hh:mi;ss PM'),to_char(sysdate,'yyyy/mm/dd hh:mi;ss PM')
+from dual;
+
+// 01-31-30 오후	          날짜: 2022/09/26 시각: 01:31:30 오후
+SELECT TO_CHAR(SYSDATE, 'HH-MI-SS PM') 시간형식,
+       TO_CHAR(SYSDATE, ' "날짜:" YYYY/MM/DD "시각:" HH:MI:SS PM' ) 날짜와시각표현
+FROM   dual;
+

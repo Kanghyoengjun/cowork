@@ -1,0 +1,207 @@
+-----상속
+--특수화(Specialization)
+Vehicle --> car,airplane,ship
+객체를 보다 상세한 객체 타입들로 세분화
+부모클래스의 속성이나 메소드들은 자식클래스에서 재정의하지않고 그대로 사용가능
+------------------------------------------------------------------------------------
+--일반화(Generalization)
+포유류 <-- 사람,고래,원숭이
+여러 클래스들의 공통된 속성이나 함수들을 일반화시켜서 새로운 클래스 정의
+class 포유류
+class 사람 extends 포유류
+------------------------------------------------------------------------------------
+C include = Java import
+  A.B.C.Test, A.B.C.Test2...   --> A.B.C.*
+  
+super <- sub , parent <- child ,   베이스 <- 유도(파생)
+
+자식은 부모 메소드,속성 사용가능, 부모는 자식 메소드,속성 사용 불가능
+  private 제외
+
+-이점
+확장성이 좋다.
+유지보수성이 좋다.
+재사용성이 좋다.
+이해가 용이하다.
+추상화가 높아진다.
+대치성이 가능하다.    -> upcasting
+
+-오버라이딩                                                                                 
+자식클래스에서 부모클래스의 같은이름의 메소드를 재정의하여 사용
+
+-오버로딩
+한 클래스에서 같은이름의 메소드를 재정의하여 사용
+
+-추상클래스
+추상클래스는 객체생성 불가
+높은 재사용성
+자식클래스들에 대한 IS-A 관계 강화
+이기종 객체들의 수집
+확장성 향상
+유지보수성 향상
+
+-----------JAVA--------
+-----*Person
+package Test;
+
+public class Person {
+	String name;
+	String address;
+	String phone;
+	public Person(String name, String addr, String phone) {
+		this.name=name;
+		address=addr;
+		this.phone=phone;
+	}
+	public String getname() {return name;}
+	//public void setname(String newName) {name = newName;}
+	public void printLabel() {System.out.println("Person출력");}
+	public void changeAddress(String addr) {address = addr;}
+}
+
+class Student extends Person{
+	private String major;
+	private String minor;
+	private String advisor;
+	private float GPA;
+	private int coursesTaken;
+	public Student(String name, String addr, String phone) {
+		super(name,addr,phone);
+		this.major="소프트웨어공학";
+		this.minor="시스템설계";
+		this.advisor="조은숙";
+	}
+	public void printTranscript() {System.out.println("Student출력");}
+}
+-------------------------------------------------------------------------
+*Controller
+package Test;
+
+public class Controller {
+	
+	public static void main(String[] args) {
+		Person p = new Person("강형준","서울시 강북구","010-8827-6828");
+		System.out.println("p 객체의 이름 = "+p.getname());
+
+		Student s = new Student("강형민","번동","010-3666-6828");
+		System.out.println("s 객체의 이름 = "+s.getname());
+	}
+}
+-------------------------------------------------------------------------
+package Test;
+
+class Parent{
+	String name;
+	int age;
+	String phone;
+	
+	public Parent(String name, int age, String phone) {
+		this.name=name;
+		this.age=age;
+		this.phone=phone;
+	}
+	public String getName() {return name;}
+	public int getAge() {return age;}
+}
+class Child extends Parent{
+	private String hobby;
+	
+	public Child(String name, int age, String phone) {
+		super(name,age,phone);
+	}
+  //getName 오버라이딩
+	public String getName() {return name+"아기";}
+}
+public class Controller {
+	
+	public static void main(String[] args) {
+		//Parent 객체 p 생성
+		Parent p2 = new Parent("길동아빠",32,"010-4231-8975");
+		//p객체 이름 나이 출력
+		System.out.println("p2 객체의 이름 = "+p2.getName());
+		System.out.println("p2 객체의 나이 = "+p2.getAge());
+		//child 객체 c 생성
+		Child c = new Child("길동",4,"010-2314-4236");
+		//child 객체 이름 나이 출력
+		System.out.println("c 객체의 이름 = "+c.getName());
+		System.out.println("c 객체의 나이 = "+c.getAge());
+	}
+}
+-------------------------------------------------------------------
+package Test;
+
+class Instrument{
+	public void play() {
+		System.out.println("...Instrument Playing...");
+	}
+	public static void tune(Instrument x) {
+		x.play();
+	}
+}
+
+public class Wind extends Instrument{
+
+	public static void main(String[] args) {
+		Instrument i = new Instrument();
+		i.tune(i);
+		Wind flute = new Wind();
+		i.tune(flute);
+	}
+	public void play() {
+		System.out.println("...Wind Playing...");
+	}
+}
+-------------------------------------------------------------------
+package Test;
+
+public abstract class Figure {
+	public void setColor(String color) {
+		System.out.println("Color Set Complete");
+	}
+	public abstract void area();
+}
+class Circle extends Figure{
+	public void area() {
+		System.out.println("원 면적 계산.");
+	}
+}
+class Rectangle extends Figure{
+	public void area() {
+		System.out.println("사각형 면적 계산.");
+	}
+}
+class Triangle extends Figure{
+	public void area() {
+		System.out.println("삼각형 면적 계산.");
+	}
+}
+-------------------------------------------------------------------
+package Test;
+
+public class Controller {
+	static Figure figures[] = new Figure[3];
+	static int i = 0;
+	
+	public static void main(String[] args) {
+		Circle c = new Circle();
+		Rectangle r = new Rectangle();
+		Triangle t = new Triangle();
+		addFigure(c);
+		addFigure(r);
+		addFigure(t);
+		areaFigure();
+	}
+	
+	public static void addFigure(Figure f) {
+		figures[i++]=f;
+		System.out.println("figures["+i+"]"+"가 추가되었습니다.\n");
+	}
+	public static void areaFigure() {
+		for(int i=0;i<3;i++) {
+			figures[i].area();
+		}
+	}
+}
+
+-----------Test-------------
+**자바로 상속 구현 키워드

@@ -1,0 +1,29 @@
+10/24 중간고사
+----------------------------------------------------------------
+파일입출력 관련 = Doc.cpp
+view.cpp
+
+--키보드 입력
+WM_KEYDOWN
+WM_CHAR
+WM_KEYUP
+
+nChar - 가상 키 값
+nRepCnt - 반복 횟수
+nFlags - 
+
+onchar - 저장
+ondraw - 출력
+
+함수추가 = 클래스뷰->속성->메시지
+
+--OnDraw
+pDC->TextOutW(100, 200, m_str, m_str.GetLength());
+
+
+--OnChar
+if (nChar == VK_BACK)
+		m_str.Delete(m_str.GetLength() - 1);
+	else
+		m_str.AppendChar(nChar);
+	Invalidate();

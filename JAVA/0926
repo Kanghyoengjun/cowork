@@ -32,3 +32,26 @@ double      8byte
 상수 - final
 var - 타입생략하고 변수선언가능, 초기값지정해야함
 자동타입변환         강제타입변환 - double d = 1.9;   int n = (int) d; -> 강제타입변환으로 0.9손실 -> n=1
+
+
+public class Start {
+	
+	
+	public static int sum(int a,int b) {
+		return a+b;
+	}
+	
+	public static void main(String[] args) {
+	//	System.out.println("Start Java!!!");
+		int i = 234;
+		int s;
+		char a;
+		
+		s = sum(i,20);
+		a='?';
+		
+		System.out.println(a);
+		System.out.println("Start Java");
+		System.out.println(s);
+	}
+}

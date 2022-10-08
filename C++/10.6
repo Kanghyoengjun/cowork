@@ -27,3 +27,74 @@ if (nChar == VK_BACK)
 	else
 		m_str.AppendChar(nChar);
 	Invalidate();
+	
+switch (nChar) {
+	case 'r':
+		m_PenColor = RGB(255, 0, 0);
+		break;
+	case 'g':
+		m_PenColor = RGB(0, 255, 0);
+		break;
+	case 'b':
+		m_PenColor = RGB(0, 0, 255);
+		break;
+	case 'p':
+		m_PenColor = RGB(255, 0, 255);
+		break;
+	case 's':
+		m_PenColor = RGB(0, 255, 255);
+		break;
+	case 'y':
+		m_PenColor = RGB(255, 255, 0);
+		break;
+	case 'l':
+		m_PenColor = RGB(190, 255, 0);
+		break;
+	}
+	CView::OnChar(nChar, nRepCnt, nFlags);
+
+
+--color rectangle
+CPen pen, * oldPen;
+	CRect t, rt(200, 200, 600, 600);
+	m_PenColor = RGB(0, 200, 200);
+	pen.CreatePen(PS_DASH, 1, m_PenColor);
+	oldPen = pDC->SelectObject(&pen);
+	pDC->Rectangle(m_ptLeftTop.x, m_ptLeftTop.y, m_ptRightBottom.x, m_ptRightBottom.y);
+	pDC->Rectangle(150, 150, 500, 500);
+	pDC->SelectObject(oldPen);
+	pDC->DrawText(L"이름:강형준\n학번:201904026\n학과:소프트웨어공학 2C반", &rt, DT_VCENTER);
+	pen.DeleteObject();
+	
+--pen
+pDC->SetTextColor(RGB(255, 0, 0));
+	/*pDC->MoveTo(m_ptStart);
+	pDC->LineTo(m_ptEnd);
+	pDC->LineTo(m_ptStart);
+	pDC->MoveTo(m_ptEnd);
+	
+	pDC->Ellipse(800, 800, 200, 200);	// 타원
+	pDC->Rectangle(150, 150, 400, 400);	// 사각형
+	
+--OnLButtonDown
+m_ptStart = point;
+m_ptLeftTop = point;
+CView::OnLButtonDown(nFlags, point);
+
+--OnLButtonUp
+m_ptEnd = point;
+m_ptRightBottom = point;
+Invalidate();
+CView::OnLButtonUp(nFlags, point);
+
+--OnMouseMove
+if (nFlags & MK_LBUTTON) {
+	m_ptEnd = point;
+	m_ptRightBottom = point;
+	Invalidate();
+}
+CView::OnMouseMove(nFlags, point);
+
+
+--OnRButtonDown
+CView::OnRButtonDown(nFlags, point);

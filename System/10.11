@@ -1,0 +1,199 @@
+자격증
+산업기사는 너무 구시대적임 -> 따지말란 소리는 아니고 그냥 한줄채우기용 -> 실무 관련을 따도록
+kosta.or.kr -> test
+
+---추상 클래스(Abstract Class)
+여러 클래스들에 중복적으로 존재하는 행위를 하나의 공통된 위치로 뽑아내는 장치
+모든 클래스들에 공통된 인터페이스를 생성 -> 공통된 인터페이스는 서로다른 클래스에서 서로 다르게 표현가능
+모든 서브 클래스의 메소드들은 동적 바인딩 메커니즘을 통해서 호출가능
+오버라이딩
+높은 재사용성, Subclass 들에 대한 IS-A 관계 강화, 이기종 객체들의 수집, 유지보수,확장성 향상
+함수정의,선언,변수선언 가능
+
+---인터페이스
+.서로 관련없는 객체들이 상호작용 하기 위해 사용하는 도구
+리모콘과 TV, GUI
+public이어야함
+메소드구현X  only 선언
+Interface 키워드
+객체 생성 불가능
+변수 선언 불가능
+
+---다형성(Polymorphism)
+.2개 이상의 객체들이 동일 메시지에 대해 각자 반응하는 것
+Late Binding
+Overloading - 서로 다른 변수 타입이나 개수를 지닌 같은 이름의 메소드가 한 클래스 내에 존재
+Overriding - 똑같은 메소드를 서브 클래스에서 재정의
+
+print(String s, int x)   <--overloading->   print(int x, String s)
+
+
+-------------Controller
+abstract class Figure{
+	public void setColor(String color) {
+		System.out.println("---새로운 " + color+ "로 변경됨---");
+	}
+	abstract public void move(int x,int y); // 추상 함수
+}
+
+class Point extends Figure{
+	int x,y;	
+	public void move(int x,int y) {
+		System.out.println("---점이 "+x+" 와 "+y+" 만큼 이동됨---");
+	}
+}
+
+class Circle extends Figure{
+	int x,y;
+	int r;
+	public void move(int x,int y) {
+		System.out.println("---원의 중심이 "+x+" 와 "+y+" 만큼 이동됨---");
+	}
+}
+
+class Rectangle extends Figure{
+	int x,y;
+	int width;
+	int height;
+	public void move(int x,int y) {
+		System.out.println("---사각형이 "+x+" 와 "+y+" 만큼 이동됨---");
+	}
+}
+
+public class Controller {
+	static Figure figures[] = new Figure[3];        //동적 바인딩
+	static int count=0;                             //static
+	public static void addFigure(Figure f) {		    //figures 배열에 객체들을 저장
+		figures[count++]=f;
+	}
+	public static void moveAll(int x, int y) {
+		for(int i=0; i<count; i++)
+			figures[i].move(5, 5);
+	}
+	
+	public static void main(String[] args){
+		Point p = new Point();
+		Circle c= new Circle();
+		Rectangle r = new Rectangle();
+		/*p.move(5, 5);                               
+		c.move(12, 12);
+		r.move(36, 36);*/
+		addFigure(p);
+		addFigure(c);
+		addFigure(r);
+		moveAll(5,5);
+	}
+}
+
+--------------Remote_Controller.java(interface)
+public interface Remote_Controller {
+	public void powerOn();
+	public void powerOff();
+	
+}
+class BeamProjector implements Remote_Controller{
+
+	@Override
+	public void powerOn() {
+		System.out.println("---Beam PowerOn---");
+	}
+
+	@Override
+	public void powerOff() {
+		System.out.println("---Beam PowerOff---");
+	}
+}
+--------------Controller
+public class Controller{
+	public static void main(String[] args){
+		BeamProjector bp = new BeamProjector();
+		bp.powerOn();
+		bp.powerOff();
+	}
+}
+
+--------------Polymorphism
+class Tree{
+	public Tree() {
+		System.out.println("---Tree 객체 생성---");
+	}
+	public Tree(String name) {								//함수 오버로딩
+		System.out.println("---"+name+" Tree 생성---");
+	}
+}
+
+abstract class File{
+	String name;
+	public void open() {									
+		System.out.println("---File Open---");
+	}
+	public abstract void print();							
+}
+
+class pdf_File extends File{
+	public void open() {									//오버라이딩
+		System.out.println("---pdf File Open---");
+	}
+	public void print() {									//오버로딩
+		System.out.println("---pdf File Print---");
+	}
+}
+
+class jpg_File extends File{
+	public void open() {									//오버라이딩
+		System.out.println("---jpg File Open---");
+	}
+	public void print() {									//오버로딩
+		System.out.println("---jpg File Print---");
+	}
+}
+
+public class Controller{
+	public static void main(String[] args){
+	/*	Tree t1= new Tree();
+		Tree t2= new Tree("박준");*/
+		pdf_File pf= new pdf_File();
+		jpg_File jf= new jpg_File();
+		pf.open();
+		pf.print();
+		jf.open();
+		jf.print();
+	}
+}
+
+-----------------------Test(package) A(class)
+package Test;
+import Sample.*;		//Sample의 모든 Class를 다 갖다 쓰겠다
+
+public class A {
+	public static void main(String[] args) {
+		A2 a2= new A2();
+		B b1= new B();
+		a2.f2(b1);
+	}	
+}
+
+class A2{
+	public A2() {
+		System.out.println("---A 객체 생성---");
+	}
+	public void f2(B b1) {
+		System.out.println("---A2의 f2함수에서 B의 f1함수 호출---");
+		b1.f1();
+	}
+}
+
+--------------------------sample(package) B(class)
+package Sample;
+
+public class B {
+	public void f1() {
+		System.out.println("---B의 함수 실행---");
+	}
+}
+
+----------------------------------------------
+문법만이 중요한게 아니다 -> 설계,문제해결 능력이 중요(알고리즘)
+
+----------------------------------------------
+유스케이스 다이어그램

@@ -1,0 +1,126 @@
+---중간고사---
+결과를 써라
+코딩을 몇줄 써라
+-----시험출제----------------------
+-----2장-----
+-MFC 기반 응용 프로그램의 특징
+GUI 기반 프로그램 : 생성된 윈도우에 메뉴, 툴바를 기본적으로 제공하고 대화상자나 폼뷰에 
+                   다양한 컨트롤을 표현하여 GUI 기반 프로그램을 쉽게 개발할 수 있다
+이벤트 기반 프로그램 : 사용자는 윈도우에서 제공한 GUI를 통해 응용 프로그램과 소통하는데, 사용자나 또 다른 누군가에 의해 발생하는 사건을 이벤트라고 한다.
+                      이벤트가 발생하면 수행되는 이벤트 처리 함수를 쉽게 만들 수 있도록 되어 있다.
+멀티스레드 기반 프로그램 : 윈도우 응용 프로그램은 멀티스레드 개념을 이용하여 복수의 작업을 동시에 처리할 수있도록 라이브러리를 제공한다.
+
+-클래스의 계층구조
+
+-단일 문서 응용 프로그램의 구조
+CProjectApp - 
+CMainFrame  - 
+CProjectView - 
+CProjectDoc - 
+
+-----3장-----
+-디바이스 콘텍스트
+CDC class
+pDC
+
+-텍스트 출력하기
+CRect - 
+
+배경색 : pDC->SetBkColor(RGB(255,0,0));
+글자색 : pDC->SetTextColor(RGB
+글꼴 : CFont font;
+       font.CreatePointFont(150,_T("궁서체"));
+       pDC->SelectObject(&font);  //등록
+       font.DeleteObject();       //메모리에서 해제
+정렬 : pDC->SetTextAlign(TA_CENTER);
+임의의수 : rand()
+
+-CString class
+Cstring val;
+int x =100;
+val.Format(_T("%d",x));
+pDC->TextOut(5,10,val);
+
+-CPoint
+m_ptStart, m_ptEnd
+Invalidate()        // 다시그리기
+
+-CClientDC   -  OnDraw 이외의 다른곳에서 출력가능
+(OnLButtonDown 함수)
+  CClientDC dc(this);
+	dc.Rectangle(100, 100, 200, 250);             // 사각형이 그려진다
+	CView::OnLButtonDown(nFlags, point);
+  
+  -Timer
+  SetTimer(1,1000,NULL);    // 타이머(n번타이머, 1000이 1초, 이름);
+  KillTimer                 // 타이머죽이기
+  
+-------------------------------------------
+MFC - Microsoft Foundation Classes
+
+View -> OnDraw -> pDC = DC class 의pointer
+
+-코드 표기법
+모든 클래스는 대문자 C로 시작
+여러 단어를 이어서 식별자를 표시할 떄에는 각 단어의 첫글자를 대문자
+--------------------------------------------
+1교시
+void CMy1017View::OnDraw(CDC* pDC)
+{
+		return;
+	int r,r2, g,g2, b,b2;
+	srand(time(NULL));
+	r = rand()%256;		g = rand() % 256;		b = rand() % 256; 
+	pDC->SetTextColor(RGB(r, g, b));
+	pDC->TextOutW(2, 2, L"L 문자열 입력");
+	pDC->TextOutW(2, 50, _T("_T 문자열 입력"));
+	CRect t(100, 100, 500, 500);
+	pDC->SetTextColor(RGB(r, g, b));
+	pDC->DrawText(_T("사각형\n영역"), &t,DT_LEFT|DT_VCENTER);
+	pDC->MoveTo(100, 100);
+	pDC->LineTo(500, 500);
+	pDC->Rectangle(600, 100, 900, 400);
+	pDC->Ellipse(600, 100, 900, 400);
+	pDC->Ellipse(950, 100, 1100, 600);
+	int  vt = 100;
+	int hr = 100;
+	for (int i = 0; i < 41; i++) {
+		pDC->MoveTo(100, vt);
+		pDC->LineTo(500, vt);
+		vt += 10;
+	}
+	for (int i = 0; i < 41; i++) {
+		pDC->MoveTo(hr, 100);
+		pDC->LineTo(hr, 500);
+		hr += 10;
+	}
+}
+------------------------------------------------
+2교시
+// Pen
+	CPen pen, * oldpen;
+	pen.CreatePen(PS_GEOMETRIC, 10, RGB(r, g, b));				// 펜 생성
+	oldpen = pDC->SelectObject(&pen);							// 펜 등록
+	pDC->Rectangle(m_Start.x, m_Start.y, m_End.x, m_End.y);
+	pDC->SelectObject(oldpen);									// 원래대로 돌려주기
+	pen.DeleteObject();											// 펜 해제
+	
+
+	// Brush
+	int hr = 300;
+	int vt = 100;
+	for (int i = 0; i < 10; i++) {
+		CBrush brush, * oldbrush;
+		brush.CreateSolidBrush(RGB(r, g, b));
+		oldbrush = pDC->SelectObject(&brush);
+		pDC->RoundRect(CRect(hr, vt, hr+100, vt+100),CPoint(20,20));
+		pDC->SelectObject(oldbrush);
+		r += 30; g += 40; b += 50;
+		hr += 100;
+		brush.DeleteObject();
+	}
+  -------------------------------------------------
+  과제
+  볼게임 소스 전부 복사해서 워드, 결과화면 캡쳐
+
+  

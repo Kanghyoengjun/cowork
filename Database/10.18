@@ -1,0 +1,162 @@
+---집합 연산자
+UNION, UNION ALL  - 합집합, ALL = 중복도 그대로
+INTERSECT         - 교집합
+MINUS             - 차집합
+
+
+count -> 1,0 ????
+
+---PRE---
+---------------------------------------------------
+-- 6.5 집합연산자 : UNION, UNION ALL, INTERSECT, 
+-- 6.5.1 사원이 소속된 부서와 소속가능한 모든 부서를 중복없이 조회하시오.
+--       UNION 사용
+---------------------------------------------------
+select distinct department_id
+from employees
+where department_id is not null
+UNION
+select department_id
+from departments;
+---------------------------------------------------
+
+---------------------------------------------------
+-- 6.5.2 사원이 소속된 부서와 소속가능한 모든 부서를 중복하여 조회하시오.
+--       UNION all 사용
+---------------------------------------------------
+select distinct department_id
+from employees
+where department_id is not null
+UNION ALL
+select department_id
+from departments;
+---------------------------------------------------
+
+---------------------------------------------------
+-- 6.5.3 부서중 사원이 소속된 부서를 조회하시오.
+--       INTERSECT 사용
+---------------------------------------------------
+select distinct department_id
+from employees
+where department_id is not null
+intersect
+select department_id
+from departments;
+---------------------------------------------------
+
+---------------------------------------------------
+-- 6.5.4 모든 부서중 소속된 사원이 없는 부서를 조회하시오.
+--       MINUS 사용
+---------------------------------------------------
+select department_id
+from departments
+minus
+select distinct department_id
+from employees
+where department_id is not null;
+---------------------------------------------------
+---QUIZ---
+--------------------------------------------------------------------------------
+-- Quiz 6.14 모든 부서장이상인 관리자 명단을 조회하시오.(UNION 사용)
+--      관리자구분 :      사장(employees Table의 manager_id is null)
+--                      부서장(depatments Table의 manager_id)
+--  사번    사원명           관리자구분
+--  100	Steven King	        사장
+--  103	Alexander Hunold	부서장 
+--------------------------------------------------------------------------------
+select e.employee_id 사번, e.first_name||' '||e.last_name 사원명, '부사장' 관리자구분
+from employees e, departments d
+where e.department_id = d.department_id
+and e.employee_id = d.manager_id
+and e.manager_id is not null
+UNION
+select e.employee_id 사번, e.first_name||' '||e.last_name 사원명, '사장' 관리자구분
+from departments d, employees e
+where e.department_id = d.department_id
+and e.employee_id = d.manager_id
+and e.manager_id is null;
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- Quiz 6.15 모든 사원의 업무이력 변경정보 및 변경에 따른 부서정보를 사번이 빠른 순서대로
+--           조회하시오. (Union all 이용)
+-- 조회항목 : 부서명, 직무명 , 직무구분(현재또는과거직무)
+-- 조회형태
+--   사번       부서명            직무명
+--  101	    Accounting	Public Accountant
+--  101	    Executive	Administration Vice President
+--  101	    Accounting	Accounting Manager
+------------------------------------------------------------------------------
+select e.employee_id 사번, d.department_name 부서명, j.job_title 직무명
+from employees e, departments d, jobs j
+where e.job_id = j.job_id
+and d.department_id = e.department_id
+union all
+select h.employee_id 사번, d.department_name 부서명, j.job_title 직무명
+from job_history h, departments d, jobs j
+where h.job_id = j.job_id
+and d.department_id = h.department_id
+order by 사번 asc;
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+-- Quiz 6.16 사번 101번인 사원의 현재직무와 과거 직무를 모두 조회하시오. (Union이용)
+-- 조회항목 : 부서명, 직무명 , 직무구분(현재또는과거직무)
+-- 조회형태
+--   부서명            직무명                     직무구분
+--  Accounting	Accounting Manager	            과거
+--  Accounting	Public Accountant	            과거
+--  Executive	Administration Vice President	현재
+--------------------------------------------------------------------------------
+select d.department_name 부서명, j.job_title 직무명, '현재' 직무구분
+from employees e, departments d, jobs j
+where e.job_id = j.job_id
+and d.department_id = e.department_id
+and e.employee_id=101
+union
+select d.department_name 부서명, j.job_title 직무명, '과거' 직무구분
+from departments d, jobs j, job_history h
+where h.job_id = j.job_id
+and d.department_id = h.department_id
+and h.employee_id=101;
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- Quiz 6.17 모든 부서중 미국에 없는 부서명을 조회하시오. (Minus이용)
+-- 조회항목 : 부서명, 직무명 , 직무구분(현재또는과거직무)
+-- 조회형태
+--   부서ID            부서명                     
+--    20	          Marketing
+--------------------------------------------------------------------------------
+select d.department_id 부서ID, d.department_name 부서명
+from departments d,countries c, locations l
+where d.location_id = l.location_id
+and c.country_id = l.country_id
+minus
+select d.department_id 부서ID, d.department_name 부서명
+from departments d,countries c, locations l
+where d.location_id = l.location_id
+and c.country_id = l.country_id
+and c.country_id = 'US';
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- Quiz 6.18 근속년수가 20년이상이면서 지금까지 맡았던 
+--           직무가 2개 이상인 직원의 이름을 조회하시오. (INTERSECT)
+-- 조회항목 : 부서명, 직무명 , 직무구분(현재또는과거직무)
+-- 조회형태
+--   사원ID        사원명                     
+--    102	    De Haan Lex
+--    114	    Raphaely Den
+--------------------------------------------------------------------------------
+select e.employee_id 사원ID, e.first_name||' '||e.last_name 사원명 
+from employees e,jobs j
+where j.job_id = e.job_id
+and round(months_between(sysdate, hire_date)/12, 0) >= 20
+intersect
+select e.employee_id 사원ID, e.first_name||' '||e.last_name 사원명 
+from employees e,jobs j,job_history h
+where e.employee_id = h.employee_id
+and j.job_id = e.job_id;
+--------------------------------------------------------------------------------

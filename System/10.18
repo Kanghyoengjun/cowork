@@ -1,0 +1,178 @@
+-시험-
+11시까지, 필기도구 + 책
+
+클래스 다이어그램
+유스케이스 다이어그램
+시퀀스 다이어그램
+
+Contents c; 위에서 선언만
+Slide 생성자에서 객체 생성 c=new Contents();
+  -> Slide와 Contents가 컴포지션 관계일때
+  
+
+-----모의 테스트1
+class A{
+	private int x;
+	private int y;
+	
+	public A(int x, int y){
+		this.x=x;
+		this.y=y;
+	}
+	public int add() {		
+		return x+y;
+	}
+	public int sub() {
+		return x-y;
+	}
+	public int mul() {
+		return x*y;
+	}
+	public double div() {
+		return x/y;
+	}	
+}
+public class Controller {
+	public static void main(String[] args) {
+		int x=6;
+		int y=3;
+		A myA = new A(x,y);
+		
+		System.out.print(x+"+"+y+" = " + myA.add());
+		System.out.print(", "+x+"-"+y+" = " + myA.sub());
+		System.out.print(", "+x+"*"+y+" = " + myA.mul());
+		System.out.print(", "+x+"/"+y+" = " + myA.div());
+	}
+}
+
+-----모의 테스트2
+class Contents{
+	String name;
+	String type;
+	
+	public Contents(String n, String t) {
+		System.out.println("컨텐츠를 추가합니다.....");
+	}
+	public void callname(String n){
+		name=n;
+		System.out.println("Contents name: "+name);
+	}
+	public void calltype(String t) {
+		type=t;
+		System.out.println("Contents type: "+type);
+	}
+}
+class Slide{
+	int number;
+	String size;
+	String direction;
+	
+	public Slide(int n, String s, String d) {
+		number=n; size=s; direction=d;
+		System.out.println("Slide객체 생성.....");
+		System.out.println("number: "+n+" size: "+s+" direction: "+d);
+	}
+	public void setsize(String s) {
+		size=s;
+		System.out.println("size를 "+size+"로 변경.....");
+	}
+	public void setdirection(String d) {
+		direction=d;
+		System.out.println("direction을 "+direction+"로 변경.....");
+	}
+	public void addContents(String n, String t) {	
+		Contents c = new Contents(n,t);
+		c.callname(n);
+		c.calltype(t);
+	}
+}
+public class SController {
+	public static void main(String[] args) {
+		Slide s = new Slide(1,"A3","가로");
+		
+		s.setsize("C4");
+		s.setdirection("세로");
+		System.out.println("number: "+ s.number +" size: "+s.size+" direction: "+s.direction);
+		s.addContents("name1","type3");	
+	}
+}
+
+package Cartpack;
+abstract class Product{
+	String name;
+	int price;
+	
+	public void discount(int rate) {
+		price *= rate/100;
+		System.out.println("할인된 가격 = "+price);
+	}
+	abstract public void display();
+}
+class Book extends Product{
+	String name;
+	int price;
+	String author;
+	String publishing;
+	
+	public Book(String n, int p, String a, String pb) {
+		super.name=n; price=p; author=a; publishing=pb;
+	}
+	public void display() {
+		System.out.println("도서명: "+ super.name + " 가격: " + price + 
+							" 작가: " + author + " 출판사: " + publishing);
+	}
+}
+class Bag extends Product{
+	String model;
+	int price;
+	String brand;
+	String manufacture;
+	
+	public Bag(String m, int p, String b, String mf) {
+		 super.name=m; price=p; brand=b; manufacture=mf;
+	}
+	public void display() {
+		System.out.println("모델명: "+ super.name + " 가격: " + price + 
+							" 브랜드명: " + brand + " 제조사: " + manufacture);
+	}
+}
+class Monitor extends Product{
+	String model;
+	int price;
+	String brand;
+	String manufacture;
+	String screen;
+	
+	public Monitor(String m, int p, String b, String mf, String s) {
+		super.name=m; price=p; brand=b; manufacture=mf; screen=s;
+	}
+	public void display() {
+		System.out.println("모델명: "+ super.name + " 가격: " + price + 
+							" 브랜드명: " + brand + " 제조사: " + manufacture +
+							 " 해상도: " + screen );
+	}
+}
+public class Cart {
+	static Product products[] = new Product[10];
+	static int buy = 0;
+	
+	public static void addCart(Product p) {
+		products[buy++] = p;
+	}
+	public static void displayAll() {
+		for(int i=0; i<buy; i++) {
+			products[i].display();
+		}
+	}
+	
+	public static void main(String[] args) {
+		Book book = new Book("객체지향 설계",500,"조은숙","인피니티북스");
+		Bag bag = new Bag("백팩",40000,"후아유","제조사");
+		Monitor moni = new Monitor("한성컴퓨터 무결점 게이밍",270000,"한성컴퓨터","한성","FHD");
+		
+		addCart(book);
+		addCart(bag);
+		addCart(moni);
+		displayAll();
+	}
+}

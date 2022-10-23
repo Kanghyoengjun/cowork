@@ -13,25 +13,26 @@ GUI 기반 프로그램 : 생성된 윈도우에 메뉴, 툴바를 기본적으�
 -클래스의 계층구조
 
 -단일 문서 응용 프로그램의 구조
-CProjectApp - 
-CMainFrame  - 
-CProjectView - 
-CProjectDoc - 
+CWinApp, CFrameWnd, CView, CDocument
+CProjectApp - 프로그램의 메인이 되는 클래스로서 나머지 세 클래스의 객체를 만들고 메인 윈도우를 생성하여 화면에 나타낸다.
+CMainFrame  - 윈도우의 외곽 경계를 담당하고 메뉴,툴바,상태바를 생성한다.
+CProjectView - 뷰 윈도우 영역에서 입출력을 담당한다.
+CProjectDoc - 디스크에 파일로 저장하거나 파일을 읽어오는 기능을 담당한다.
 
 -----3장-----
 -디바이스 콘텍스트
 CDC class
-pDC
+pDC - DC class 의 pointer
 
 -텍스트 출력하기
-CRect - 
+CRect rt(100,100,200,200);
 
 배경색 : pDC->SetBkColor(RGB(255,0,0));
 글자색 : pDC->SetTextColor(RGB
 글꼴 : CFont font;
        font.CreatePointFont(150,_T("궁서체"));
-       pDC->SelectObject(&font);  //등록
-       font.DeleteObject();       //메모리에서 해제
+       pDC->SelectObject(&font);  		//등록
+       font.DeleteObject();     		//메모리에서 해제
 정렬 : pDC->SetTextAlign(TA_CENTER);
 임의의수 : rand()
 

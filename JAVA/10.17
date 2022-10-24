@@ -57,6 +57,10 @@ finally{
   예외발생여부와 상관없이 실행되는 문
 }
 
+가장많이 볼 예외처리문
+NullPointerException
+InputMismatchException
+
 ------1교시 배열기본 실습------
 import java.util.Scanner;
 public class ArrayAccess {

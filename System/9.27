@@ -14,7 +14,7 @@
 public interface,sequence diagram,class diagram,모듈,정적설계,동적설계,추상화,객체지향
 
 클래스가 객체보다 먼저임.
-
+UML = Unified Modeling Language
 -----------------------------------------------------------------------------------------------------------------
 -복합객체(Composite Object)-
 super object, part object, sub object

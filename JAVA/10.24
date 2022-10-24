@@ -1,0 +1,61 @@
+백앤드개발자 -> mvc
+-throws
+  예외를 발생시킨 실행문의 상위 코드 블록에게 exception 떠넘기기
+  떠넘겨진 예외 객체는 적절한 예외 핸들러를 만나 처리될 때까지 계속 메소드 호출 역순으로 전달
+  main() 까지 떠넘겨도 적절한 예외 핸들러를 찾지 못하면 JVM은 해당 프로그램을 종료 시킴
+  
+throws 를 실제로 사용하나??
+단독으로는 잘 안쓰고 상속에서 자주쓴다.
+
+--4장
+-클래스와 객체
+객체지향 언어의 가장 큰 장점 -> 코드의 재사용성이 뛰어나다
+
+*실세계 객체의 특징 
+  객체마다 고유한 특성(속성)과 행동을 가짐
+  객체들끼리 메시지를 주고받으며 서로 상호작용을 한다.
+  
+*이 언어가 객체지향 언어다
+  캡슐화
+  상속
+  다형성
+자바는 뼛속까지 객체지향 언어임, C++은 자바정도는 아니다.
+-캡슐화 : 객체를 캡슐로 싸서 내부를 볼 수 없게 하는 것 -> 외부의 접근으로부터 객체를 보호   = 객체의 가장 본질적인 특징
+          public, private ...
+          클래스: 객체 모양을 선언한 틀(캡슐화하는 틀) -> 클래스 내에 메소드(함수)와 필드(멤버변수) 구현
+          객체: 생성된 실체(instance)
+-상속 :           
+---------------------------------------------------------------------------------------
+--1교시 throws exception--
+import java.util.Scanner;
+public class DevideByZero {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int dividend;
+		int divisor;
+		
+		System.out.print("나누어지는 수:");
+		dividend = sc.nextInt();
+		System.out.print("나눌 수:");
+		divisor = sc.nextInt();
+		
+		//throws를 사용하면 try catch를 메인에다 구현
+		try {
+			divide(dividend, divisor);						
+		}
+		catch(ArithmeticException e){
+			System.out.println("0으로 나눌 수 없음.");
+		}
+	}
+
+	static void divide(int dividend, int divisor) throws ArithmeticException{
+		System.out.println(dividend + "을(를) " + divisor + "로 나눈 몫:" + dividend/divisor);						
+	}
+}
+---------------------------------------------------------------------------------------
+과제, 시험 다음주까지 (11월 6일 일요일 밤 11시 50분)
+3장 실습문제
+121p Open Challenge
+125p~ 1,2,3,5,6,8,보너스 1
+*2장이 쉬웠다고 만만하게 보지 말것

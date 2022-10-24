@@ -44,11 +44,17 @@ throws 를 실제로 사용하나??
 	클래스는 객체의 타입이다.
 	속성 -> 멤버 변수(필드),   행동 -> 멤버 메소드(함수) 구현
 --객체
-	
-	
-	
-
+        클래스의 실체
+        메모리 공간을 갖는 구체적인 실체
+        인스턴스(instance)라고도 부름
 *****************************
+
+--클래스,객체의 생성과 활용
+  레퍼런스 변수 선언: 객체를 가리킬 레퍼런스 변수 선언 -> Circle pizza;
+  객체 생성        : new 연산자 이용, 메모리를 할당 받아 메모리에 대한 레퍼런스(주소)를 리턴함 -> pizza = new Circle();
+  객체 멤버 접근    : 점(.) 연산자 이용 -> pizza.radius = 10;   area = pizza.getArea();
+  
+
 
 객체지향을 맛보고 싶다면 mfc를 해라 -> 취업이 잘됨 -> C#도 잘됨
 ---------------------------------------------------------------------------------------
@@ -79,7 +85,59 @@ public class DevideByZero {
 		System.out.println(dividend + "을(를) " + divisor + "로 나눈 몫:" + dividend/divisor);						
 	}
 }
----------------------------------------------------------------------------------------
+
+--3교시 Circle class--
+public class Circle {
+	int radius;
+	String name;
+	
+	public double getArea() {
+		return 3.14*radius*radius;
+	}	
+	public static void main(String[] args) {
+		Circle pizza = new Circle();
+		pizza.radius = 10;
+		pizza.name = "피자";
+		double area = pizza.getArea();
+		System.out.println(pizza.name + "의 면적은 " + area);
+		
+		Circle donut = new Circle();
+		donut.radius = 2;
+		donut.name = "도넛";
+		area = donut.getArea();
+		System.out.println(donut.name + "의 면적은 " + area);	
+	}
+}
+
+--3교시 Rectangle--
+import java.util.Scanner;
+
+class Rectangle{
+	int width;
+	int height;
+	
+	public int getArea() {
+		return width*height;
+	}
+}
+
+public class RectApp {
+	public static void main(String[] args) {
+		Rectangle rt = new Rectangle();
+		Scanner sc = new Scanner(System.in);
+		System.out.print("사각형의 가로,세로 >>");
+		rt.width = sc.nextInt();
+		rt.height = sc.nextInt();
+		int area = rt.getArea();
+		System.out.println("사각형의 면적은 " + rt.getArea());
+		sc.close();
+	}
+}
+
+------------------------------------------------------------------------------------------
+---중간
+객관식 7문제, 단답형 30문제정도, 서술형 플랫폼의 독립성 -> jvm(자바가상머신),바이트코드
+---------------------------------------------------
 과제, 시험 다음주까지 (11월 6일 일요일 밤 11시 50분)
 3장 실습문제
 121p Open Challenge

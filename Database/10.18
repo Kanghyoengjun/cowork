@@ -160,3 +160,44 @@ from employees e,jobs j,job_history h
 where e.employee_id = h.employee_id
 and j.job_id = e.job_id;
 --------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Quiz 6.19  월별로 입사한 사원수를 조회하시오. (decode 이용)
+-- 조회항목 : 월별 인원수
+-- 조회형태
+-- Month1 Month2 Month3 Month4 Month5 Month6 Month7 Month8 Month9 Month10 Month11  Month12
+--  14	    13	    17	  7	    6	    11	    7	    9	    5	    6	    5	    7  
+--------------------------------------------------------------------------------
+select sum(decode(to_char(hire_date,'mm') ,'01',count(employee_id))) Month1,
+        sum(decode(to_char(hire_date,'mm') ,'02',count(employee_id))) Month2,sum(decode(to_char(hire_date,'mm') ,'03',count(employee_id))) Month3,
+        sum(decode(to_char(hire_date,'mm') ,'04',count(employee_id))) Month4,sum(decode(to_char(hire_date,'mm') ,'05',count(employee_id))) Month5,
+        sum(decode(to_char(hire_date,'mm') ,'06',count(employee_id))) Month6,sum(decode(to_char(hire_date,'mm') ,'07',count(employee_id))) Month7,
+        sum(decode(to_char(hire_date,'mm') ,'08',count(employee_id))) Month8,sum(decode(to_char(hire_date,'mm') ,'09',count(employee_id))) Month9,
+        sum(decode(to_char(hire_date,'mm') ,'10',count(employee_id))) Month10,sum(decode(to_char(hire_date,'mm') ,'11',count(employee_id))) Month11,
+        sum(decode(to_char(hire_date,'mm') ,'12',count(employee_id))) Month12
+from employees
+group by hire_date;
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Quiz 6.20  전체직원을 대상으로
+--            근속년수가  10년 미만이면 상여급 1.2%,
+--                      10년이상 15년 미만이면  1.5%
+--                      15년이상 20년미만이면 2.0% 
+--                      20년이상이면 2.5%를 인상 적용하시오(case문 이용)
+-- 조회항목 : 사번, 사원명, 부서명, 직무명, 연봉, 근속연수, 인상상여금적용비율
+-- 조회순서 : 부서명, 사번
+-- 조회형태
+--  사번  사원명              부서명        직무명          연봉  근속연수 인상상여금적용비율
+--  199	Douglas  Grant	    Shipping	Shipping Clerk	2600	15	    2
+--  178	Kimberely Grant	    Sales       Representative	7000	15	    2.15
+--------------------------------------------------------------------------------
+select e.employee_id 사번, e.first_name||' '||e.last_name 사원명,d.department_name 부서명,
+        j.job_title 직무명, e.salary 연봉,
+        round(months_between(sysdate, hire_date)/12, 0) 근속연수,
+        case  when round(months_between(sysdate, e.hire_date)/12, 0) < 10 then nvl(e.commission_pct+1.2,1.2)
+              when  round(months_between(sysdate, e.hire_date)/12, 0) between 10 and 14 then nvl(e.commission_pct+1.5,1.5)
+              when  round(months_between(sysdate, e.hire_date)/12, 0) between 15 and 19 then nvl(e.commission_pct+2.0,2.0)
+              else  nvl(e.commission_pct+2.5,2.5) end 인상상여금적용비율
+from employees e,departments d,jobs j
+where e.department_id = d.department_id(+)
+and e.job_id = j.job_id(+);
+--------------------------------------------------------------------------------

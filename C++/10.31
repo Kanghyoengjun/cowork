@@ -1,0 +1,191 @@
+메뉴만들기
+보기 -> 다른창 -> 리소스 뷰 -> MENU 더블클릭
+그리기 -> 직선, 원, 사각형 -> ID_LINE, ELLIPSE, RECTANGLE
+클래스추가 CGraphicObject -> 멤버변수 추가 m_kind, m_ptStart, m_ptEnd, 생성자,소멸자
+MENU 직선, 원, 사각형 이벤트 처리기 추가(view에다가)
+view.cpp 에 CGraphicObject.h include -> view.h 에 CGraphicObject m_GraphicObj;
+Menu -> 캡션에 단축키적기
+리소스뷰 -> Accelerator -> 단축키 설정
+
+
+
+IMPLEMENT_DYNCREATE(CMy1031View, CView)
+
+BEGIN_MESSAGE_MAP(CMy1031View, CView)
+	ON_COMMAND(ID_LINE, &CMy1031View::OnLine)
+	ON_COMMAND(ID_Ellipse, &CMy1031View::OnEllipse)
+	ON_COMMAND(ID_RECTANGLE, &CMy1031View::OnRectangle)
+	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONUP()
+	ON_WM_MOUSEMOVE()
+	ON_COMMAND(ID_TEXTBOX, &CMy1031View::OnText)
+	ON_WM_CHAR()
+	ON_COMMAND(ID_RED, &CMy1031View::OnRed)
+	ON_COMMAND(ID_GREEN, &CMy1031View::OnGreen)
+	ON_COMMAND(ID_BLUE, &CMy1031View::OnBlue)
+END_MESSAGE_MAP()
+
+
+void CMy1031View::OnDraw(CDC* pDC)
+{
+	CMy1031Doc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+		CPen pen, * open;
+	
+	switch (m_GraphicObj.m_kind)
+	{
+	case LINE:
+		pen.CreatePen(PS_SOLID, 1, m_GraphicObj.m_color);
+		open = pDC->SelectObject(&pen);
+		pDC->MoveTo(m_GraphicObj.m_ptStart);
+		pDC->LineTo(m_GraphicObj.m_ptEnd);
+		pDC->SelectObject(open);
+		pen.DeleteObject();
+		break;
+	case ELLIPSE:
+		pen.CreatePen(PS_SOLID, 1, m_GraphicObj.m_color);
+		open = pDC->SelectObject(&pen);
+		pDC->Ellipse(m_GraphicObj.m_ptStart.x, m_GraphicObj.m_ptStart.y,
+					 m_GraphicObj.m_ptEnd.x, m_GraphicObj.m_ptEnd.y);
+		pDC->SelectObject(open);
+		pen.DeleteObject();
+		break;
+	case RECTANGLE:
+		pen.CreatePen(PS_SOLID, 1, m_GraphicObj.m_color);
+		open = pDC->SelectObject(&pen);
+		pDC->Rectangle(m_GraphicObj.m_ptStart.x, m_GraphicObj.m_ptStart.y,
+					   m_GraphicObj.m_ptEnd.x, m_GraphicObj.m_ptEnd.y);
+		pDC->SelectObject(open);
+		pen.DeleteObject();
+		break;
+	case TEXTBOX:
+		pDC->SetTextColor(m_GraphicObj.m_color);
+		CRect rt = CRect(m_GraphicObj.m_ptStart, m_GraphicObj.m_ptEnd);
+		if (m_GraphicObj.m_strText.IsEmpty())
+			pDC->SelectObject(GetStockObject(LTGRAY_BRUSH));
+		pDC->Rectangle(&rt);
+		if (!m_GraphicObj.m_strText.IsEmpty())
+			pDC->DrawText(m_GraphicObj.m_strText, &rt, DT_TOP | DT_LEFT);
+		/*pDC->TextOutW(m_GraphicObj.m_ptStart.x, m_GraphicObj.m_ptEnd.y,
+					  m_GraphicObj.m_strText);*/
+		break;
+	}
+}
+
+
+void CMy1031View::OnLine()
+{
+	m_GraphicObj.m_kind = LINE;
+}
+
+void CMy1031View::OnEllipse()
+{
+	m_GraphicObj.m_kind = ELLIPSE;
+}
+
+void CMy1031View::OnRectangle()
+{
+	m_GraphicObj.m_kind = RECTANGLE;
+}
+
+void CMy1031View::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	m_GraphicObj.m_ptStart = point;
+
+	CView::OnLButtonDown(nFlags, point);
+}
+
+
+void CMy1031View::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	m_GraphicObj.m_ptEnd = point;
+	Invalidate();
+
+	CView::OnLButtonUp(nFlags, point);
+}
+
+void CMy1031View::OnMouseMove(UINT nFlags, CPoint point)
+{
+	if (MK_LBUTTON & nFlags) 
+	{
+		m_GraphicObj.m_ptEnd = point;
+		Invalidate();
+	}
+
+	CView::OnMouseMove(nFlags, point);
+}
+
+void CMy1031View::OnText()
+{
+	m_GraphicObj.m_kind = TEXTBOX;
+}
+
+void CMy1031View::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+	if (nChar == VK_BACK)
+		m_GraphicObj.m_strText.Delete(m_GraphicObj.m_strText.GetLength() - 1);
+	else
+		m_GraphicObj.m_strText.AppendChar(nChar);
+	Invalidate();
+	
+	CView::OnChar(nChar, nRepCnt, nFlags);
+}
+
+void CMy1031View::OnRed()
+{
+	m_GraphicObj.m_color = RGB(250, 0, 0);
+	Invalidate();
+}
+
+void CMy1031View::OnGreen()
+{
+	m_GraphicObj.m_color = RGB(0, 250, 0);
+	Invalidate();
+}
+
+void CMy1031View::OnBlue()
+{
+	m_GraphicObj.m_color = RGB(0, 0, 250);
+	Invalidate();
+}
+
+<CGraphicObject.h>
+#pragma once
+#include "atltypes.h"
+#define LINE 1
+#define ELLIPSE 2
+#define RECTANGLE 3
+#define TEXTBOX 4
+
+
+class CGraphicObject
+{
+public:
+	CGraphicObject() {};
+	~CGraphicObject() {};
+
+	short m_kind;
+	CPoint m_ptStart;
+	CPoint m_ptEnd;
+	CString m_strText;
+	COLORREF m_color;
+};
+
+<view.h>
+public:
+	afx_msg void OnLine();
+	afx_msg void OnEllipse();
+	afx_msg void OnRectangle();
+	CGraphicObject m_GraphicObj;
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnText();
+	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
+	afx_msg void OnRed();
+	afx_msg void OnGreen();
+	afx_msg void OnBlue();
+  
+  

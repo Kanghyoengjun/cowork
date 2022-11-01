@@ -1,0 +1,68 @@
+UseCase 유스케이스
+
+UseCase와 Actor는 Association만 가능하다.
+UseCase Diagram -> what?
+UseCase Description(명세서) -> how to?
+      ㄴ 텍스트, Activity Diagram, Sequence Diagram, Collaboration Diagram
+      
+
+-Activity Diagram
+InitialState, FinalState
+Swillane, Transition
+
+-Sequence Diagram 
+사용자 끌어오기, Object, class
+Stimulus 화살표쪽에있는얘가 하는일, ->는 call <-는 return
+출력 -> selfstimulus
+
+
+num1 = sc.next();
+op = sc.next();
+num2 = sc.next();
+if(op.equals("+"))
+  c1.add(Integer.parseInt(num1), Integer.pasreInt(num2));
+Integer 클래스의 parseInt --> int 형으로 바꿔줌
+
+---------------------------------------------------------------------------------
+import java.util.Scanner;
+class Calculator{
+	int sum;
+	int num1;
+	int num2;
+	String op;
+	
+	Calculator(int num1, int num2, String op){
+		this.num1 = num1;
+		this.num2 = num2;
+		this.op = op;
+	}
+	
+	public void cal() {
+		switch(op) {
+			case "+" -> sum = num1 + num2; 
+			case "-" -> sum = num1 - num2;
+			case "*" -> sum = num1 * num2;
+			case "/" -> sum = num1 / num2;
+			default -> System.out.println("warning");
+		}
+	}
+	
+	public void display() {
+		System.out.print(num1 +" " + op + " " + num2 + " = " + sum);
+	}
+  
+  public class Controller {
+	public static void main(String[] args) {
+		int num1,num2;
+		String op;
+		Scanner sc = new Scanner(System.in);
+		//사용자로부터 두 수를 입력받는다.
+		num1 = sc.nextInt();
+		op = sc.next();
+		num2 = sc.nextInt();
+		//Calculator 객체 생성
+		Calculator c1 = new Calculator(num1,num2,op);
+		c1.cal();
+		c1.display();
+    sc.close();
+    ---------------------------------------------------------------------------------

@@ -1,0 +1,94 @@
+부속질의(sub query)
+
+-스칼라 부속질의       select절 ,                           단일행,단일열 값
+-인라인 뷰            inline view, table subquery          다중행,다중열 값
+-중첩질의           nested subquery, predicate subquery    단일행,단일열 값
+
+
+-- 9. 부속질의 1
+-- 9.1 스칼라부속질의
+-- 실습예제 9.1 : 사원의 부서명을 스칼라 부속질의를 통하여 조회
+--------------------------------------------------------------------------------
+--join 이용
+select e.employee_id 사번,e.first_name||' '||e.last_name 이름,
+        d.department_name 부서명
+from employees e, departments d
+order by 부서명,사번;
+
+--스칼라 부속질의
+--메인질의
+select  e.employee_id 사번,e.first_name||' '||e.last_name 이름,e.department_id,
+        --스칼라 부속질의 : 단일행/단일열값
+        (   select department_name
+            from departments d
+            where d.department_id = e.department_id      -- 상관부속질의
+        ) 부서명
+from employees e
+order by 부서명,사번;
+--------------------------------------------------------------------------------
+-- 실습예제 9.2 : 부서의 지역명을 스칼라 부속질의를 통하여 조회
+--------------------------------------------------------------------------------
+--조인
+select d.department_id 부서코드,d.department_name 부서명,l.city 지역명
+from departments d, locations l
+where d.location_id = l.location_id;
+
+--스칼라부속질의
+select d.department_name 부서명,
+        (select city
+         from locations l
+         where d.location_id = l.location_id
+         ) 지역명
+from departments d;
+
+--비상관 스칼라 SET부속질의
+-- 사원의 연봉과 전체의 최대연봉, 최소연봉 
+select e.employee_id 사번,e.salary 사원연봉,
+        e.first_name||' '||e.last_name 사원명,
+        -- 비상관 스칼라부속질의
+        (
+            select max(salary)
+            from employees
+         ) 최대연봉,
+         (
+            select min(salary)
+            from employees
+          ) 최소연봉
+from employees e;
+
+-- 9.2 : 인라인뷰 부속질의
+-- 실습예제 9.3 : IT부서 소속직원의 모든정보를 조회하시오.(인라인 뷰 사용)
+--------------------------------------------------------------------------------
+--조인 사용
+select e.*
+from employees e, departments d
+where e.department_id = d.department_id
+and d.department_name = 'IT';
+
+--인라인 뷰
+select e.*
+from employees e,
+                --인라인뷰 : 다중행, 다중열 => 비상관부속질의
+                (
+                    select department_id
+                    from departments
+                    where department_name = 'IT'
+                 ) d
+where e.department_id = d.department_id;
+
+
+-- 실습예제 9.4 : 사원의 부서와 부서지역정보를 인라인 뷰를 사용하여 조회하시오.
+--------------------------------------------------------------------------------
+select e.employee_id 사번,e.first_name||' '||e.last_name 이름,
+        d.dname 부서,d.city 지역명,d.cname 나라명,
+        d.rname 대륙명
+from employees e,
+                    (
+                        select d.department_id did, d.department_name dname,
+                                l.city city, c.country_name cname, r.region_name rname
+                        from departments d, locations l, countries c, regions r
+                        where d.location_id = l.location_id
+                        and l.country_id = c.country_id
+                        and c.region_id = r.region_id
+                    ) d    
+where e.department_id = d.did;

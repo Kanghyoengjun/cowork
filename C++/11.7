@@ -1,0 +1,73 @@
+10.31일 수업 복습(빼먹은거 있다고함)
+
+1교시
+{
+  --내가 뭘 선택했는지 체크
+  MAINFRAME 에서 이벤트처리기 -> view -> update cmd ui
+
+  -----체크함수
+  void CMFCApplication1View::OnUpdateLine(CCmdUI* pCmdUI)
+  {
+    if (m_kind == 1)                             // Line을 선택했을때
+      pCmdUI->SetCheck(1);                       // 체크
+    else
+      pCmdUI->SetCheck(0);
+  }
+
+  -----FillSolidRect 만들기
+  case 4:
+      CRect rt(m_ptStart.x, m_ptStart.y, m_ptEnd.x, m_ptEnd.y);
+      pen.CreatePen(PS_SOLID, 1, m_color);
+      cpen = pDC->SelectObject(&pen);
+      pDC->FillSolidRect(rt,m_color);           // 사각형,rgb
+      pDC->SelectObject(cpen);
+      pen.DeleteObject();
+      break;
+}
+    
+    
+2교시
+{
+  *비트맵이미지 넣기
+  리소스뷰 -> 최상위폴더이름.rc 폴더 우클릭 -> 리소스 추가 -> 새로만들기 or 가져오기
+  위에 그리기도구들있음, 너비 높이 조정, ID 변경
+}
+
+3교시
+-----3x4 이미지출력 (랜덤은못했음)
+CDC mdc;
+	CBitmap a_bit, b_bit,c_bit,d_bit,e_bit,f_bit, * oldbit;
+	mdc.CreateCompatibleDC(pDC);							//메모리 디바이스 컨텐스트 만들기
+	a_bit.LoadBitmapW(IDB_MFC);
+	b_bit.LoadBitmapW(IDB_BG);
+	c_bit.LoadBitmapW(IDB_WA);
+	d_bit.LoadBitmapW(IDB_YO);
+	e_bit.LoadBitmapW(IDB_MA);
+	f_bit.LoadBitmapW(IDB_KU);
+	oldbit = mdc.SelectObject(&a_bit);
+//	pDC->BitBlt(500, 0, 52, 52,&mdc,0,0,SRCCOPY);			//화면에 그대로 출력
+	mdc.SelectObject(&b_bit);
+	pDC->BitBlt(0, 0, 1039, 850, &mdc, 0, 0, SRCCOPY);
+		for (int j = 0; j < 810; j+=278) {
+			mdc.SelectObject(&c_bit);
+			pDC->BitBlt(0, j, 200, 278, &mdc, 0, 0, SRCCOPY);
+			mdc.SelectObject(&d_bit);
+			pDC->BitBlt(200, j, 181, 278, &mdc, 0, 0, SRCCOPY);
+			mdc.SelectObject(&e_bit);
+			pDC->BitBlt(381, j, 217, 278, &mdc, 0, 0, SRCCOPY);
+			mdc.SelectObject(&f_bit);
+			pDC->BitBlt(598, j, 245, 278, &mdc, 0, 0, SRCCOPY);
+			mdc.SelectObject(oldbit);	
+	}
+	a_bit.DeleteObject();
+	b_bit.DeleteObject();
+	c_bit.DeleteObject();
+	d_bit.DeleteObject();
+	e_bit.DeleteObject();
+	f_bit.DeleteObject();
+	mdc.DeleteDC();
+	mdc.DeleteDC();
+	mdc.DeleteDC();
+	mdc.DeleteDC();
+	mdc.DeleteDC();
+	mdc.DeleteDC();

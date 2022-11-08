@@ -1,0 +1,271 @@
+*where 절에서 사용하는 부속질의
+상관,비상관 부속질의   단일/다중열, 단일/다중행   in,not in, exists, any, all
+
+퀴즈 9 and 10-3까지
+
+--------------------------------------------------------------------------------
+-- 9.3 부속질의
+-- 9.3.1 : 단일행 - 비교연산자
+-- 9.3.1.1 비교연산자 - 단일행 부속질의
+-- 실습예제 9.5  : 이름이 'De Haan'인 사람의 연봉과
+--                  동일한 연봉인 사원을 조회하시오.
+--------------------------------------------------------------------------------
+select first_name||' '||last_name 이름,salary 연봉
+from employees
+where salary = (
+                --중첩질의-단일행/단일열값-비상관질의
+                select salary
+                from employees
+                where last_name = 'De Haan'
+                );
+ -- 실습예제 9.6  : 이름이 'De Haan'인 사람의 연봉보다
+--                  더 적은 연봉인 사원을 조회하시오.
+--------------------------------------------------------------------------------
+select first_name||' '||last_name 이름,salary 연봉
+from employees
+where salary < (
+                select salary
+                from employees
+                where last_name = 'De Haan'
+                );
+
+-- 9.3.1.2 : 상관부속질의 : 단일행  비교연산자
+-- 실습예제 9.7 : 직무별 평균 연봉보다 많은 연봉을 받는 사원의 정보 조회
+--------------------------------------------------------------------------------
+select *
+from employees e
+where e.salary > (
+                    --중첩질의-단일행/단일열-상관부속질의
+                    select avg(salary)
+                    from employees
+                    where job_id = e.job_id
+                    group by job_id
+                );
+
+
+select job_id,avg(salary)
+from employees
+group by job_id;
+
+-- 9.3.2 : 비교연산자 => 다중행 부속질의 : 오류
+-- 실습예제 9.8 : 이름이 'Taylor'사원의 연봉과 동일한 연봉을 받는 사원을 조회하시오.
+--------------------------------------------------------------------------------
+select *
+from employees
+where salary = (
+                    --중첩질의-다중행/단일열-비상관부속질의
+                    select salary
+                    from employees
+                    where last_name = 'Taylor'
+                );
+
+        
+-- 9.3.2 : 다중행 부속질의 => IN, NOT IN 사용
+-- 실습예제 9.9 : 이름이 'Taylor'사원의 연봉과 동일한 연봉을 받는 사원을 조회하시오.
+--------------------------------------------------------------------------------
+select *
+from employees
+where salary in (
+                    --중첩질의-다중행/단일열-비상관부속질의
+                    select salary
+                    from employees
+                    where last_name = 'Taylor'
+                );
+
+-- 실습예제 9.10 : 비상관 부속질의
+-- 부서별 최저급여에 해당하는 급여를 받는 사원을 조회하시오
+--------------------------------------------------------------------------------
+select *
+from employees 
+where salary in (
+                    --중첩질의-단일열/다중행-비상관부속질의
+                    select min(salary)
+                    from employees
+                    group by department_id
+                );
+
+-- 실습예제 9.11 : 상관 부속질의
+-- 부서별 최저급여에 해당하는 급여를 받는 해당 부서의 사원을 조회하시오
+--------------------------------------------------------------------------------
+select *
+from employees e
+where e.salary in (
+                    --중첩질의-단일열/다중행-상관부속질의
+                    select min(salary)
+                    from employees
+                    where department_id = e.department_id
+                    group by department_id
+                );
+
+-- 실습예제 9.12 : 부서장만 조회하시오
+--------------------------------------------------------------------------------
+select *
+from employees
+where employee_id in (  --부서장 사번
+                        --중첩질의-단일열/다중행-비상관부속질의
+                        select manager_id
+                        from departments
+                        );
+
+-- 실습예제 9.13 : 미국에 있지 않은 부서에 정보를 조회하시오.
+--------------------------------------------------------------------------------
+select *
+from departments
+where location_id not in(
+                        select location_id
+                        from locations
+                        where country_id = 'US'
+                        );
+                        
+--미국이 있는 지역 코드 리스트 
+select *
+from departments
+where location_id not in(
+                        select location_id
+                        from locations
+                        where country_id = (
+                                            select country_id
+                                            from countries
+                                            where country_name='United States of America'
+                                            )
+                                            );
+                                            
+-- 9.3.4 : 다중행 부속질의 =>  EXISTS 사용  
+-- 실습예제 9.14 : 2개이상의 직무에 근무한 이력이 있는 사원의 정보를 조회하시오.
+--------------------------------------------------------------------------------
+select *
+from employees e
+where exists (
+               --중첩부속질의 - 다중행/다중열/ - 상관부속질의
+               select *
+               from job_history
+               where employee_id = e.employee_id
+              );
+              
+-- 실습예제 9.14와 동일 Query (in 사용)
+--------------------------------------------------------------------------------
+select *
+from employees e
+where e.employee_id in (
+                   --중첩부속질의 - 다중행/단일열/ - 상관부속질의
+                   select j.employee_id
+                   from job_history j
+                  );
+                  
+-- 9.3.5 : 다중행 다중열
+-- 실습예제 9.15 : 직무별 가장 낮은 연봉에 해당하는 사원의 정보를 조회하시오. 
+--------------------------------------------------------------------------------
+select *
+from employees e
+where (e.job_id,e.salary) in
+                            (
+                            select job_id,min(salary) 연봉
+                            from employees
+                            group by job_id
+                            );
+                            
+================================================================================
+-- 10. 부속질의 2 & 고급분석함수 & 계층검색
+--------------------------------------------------------------------------------
+-- 10.1 부속질의 다중행 부속질의 => ANY, ALL 사용
+-- 실습예제 10.1 : ALL이용
+-- 부서ID가 110번인 사원들의 최대연봉보다 많은연봉을 받는 사원 조회하기
+--------------------------------------------------------------------------------
+select *
+from employees
+where salary >( --중첩부속질의 -단일열/다중행- 비상관부속질의
+                select max(salary)
+                from employees
+                where department_id = 110
+                );
+select max(salary)
+from employees
+where department_id = 110;
+-- 동일 Query
+select *
+from employees
+where salary >ALL(  -- > ALL => 결과중 최대값 반환
+                    --중첩부속질의 -단일열/다중행- 비상관부속질의
+                select salary
+                from employees
+                where department_id = 110
+                );
+--------------------------------------------------------------------------------
+-- 실습예제 10.2 : ANY 이용
+-- 부서ID가 110번인 사원들의 연봉중 최소인 연봉보다 많은 연봉을 받는 사원 조회하기
+--------------------------------------------------------------------------------
+select *
+from employees
+where salary > (
+                select min(salary)
+                from employees
+                where department_id = 110
+                );
+ select min(salary),department_id
+ from employees
+ where department_id = 110
+ group by department_id;
+-- 동일 Query
+select *
+from employees
+where salary > any (-- > any ==> 결과중 최솟값을 반환
+                    select salary
+                    from employees
+                    where department_id = 110
+                    );
+
+--------------------------------------------------------------------------------
+-- 10. 2 고급 분석 함수
+-- 10. 2.1 NTILE 함수 이용
+--------------------------------------------------------------------------------
+-- 실습예제 10.3 : 부서별 급여합계를 조회하시오.
+--                단, 급여 합계가 제일 큰 것이 1,
+--                제일 작은 것이 4가 되도록 Bucket(등급)을 나누어 출력하고
+--                Bucket(등급)을 기준으로 오름차순 정렬하시오.
+-- 조회 형태
+--    부서명             연봉합계        Bucket#
+--    Sales	            304500	        1
+--    Shipping	        156400	        1
+--    Executive	        58000	        1
+--    Finance	        51608	        2
+--     IT	            28800	        2
+--    Purchasing	    24900	        2
+--------------------------------------------------------------------------------
+select department_id 부서ID, sum(salary) 연봉합계,
+        NTILE(4) OVER (order by sum(salary) DESC) Bucket#
+from employees
+group by department_id
+order by 3,2 desc;
+
+--------------------------------------------------------------------------------
+-- 10. 2. 2 LAG 함수 / LEAD 함수
+--------------------------------------------------------------------------------
+-- 실습예제 10.4 : 50번 부서의 사원들의 연봉 정보를 연봉의 내림차순으로 정렬하고 이전, 다음행의 급여를 함께 출력하시오.
+--------------------------------------------------------------------------------
+select employee_id 사번,last_name 이름,salary 연봉,
+        lag(salary,1,0) over (order by salary desc) 이전행연봉,
+        lead(salary,1,0) over (order by salary desc) 다음행연봉
+from employees
+where department_id = 50
+order by 3 desc;
+
+--------------------------------------------------------------------------------
+-- 10. 2.3 FIRST_value 함수 / LAST_value 함수
+--------------------------------------------------------------------------------
+-- 실습예제 10.5 : 사원의 연봉정보를 조회하면서 사원이 소속된 부서별로 연봉이 가장 많이 받거나 적게 받는 사원의 이름을 출력하시오.
+--      조회형태
+--      부서명   사원명       Max        Min
+--        IT	Hunold	    Hunold	Lorentz
+--        IT	Ernst	    Hunold	Lorentz
+--        IT	Austin	    Hunold	Lorentz
+--        IT	Pataballa	Hunold	Lorentz
+--        IT	Lorentz	    Hunold	Lorentz
+--------------------------------------------------------------------------------
+select d.department_name 부서명, e.last_name 사원명, e.salary 연봉,
+        first_value(e.last_name) over (partition by e.department_id order by e.salary desc
+        rows between unbounded preceding and unbounded following) Max,
+        last_value(e.last_name) over (partition by e.department_id order by e.salary desc
+        rows between unbounded preceding and unbounded following) Min
+from employees e, departments d
+where e.department_id = d.department_id
+order by 1,3 desc;

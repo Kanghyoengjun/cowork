@@ -1,0 +1,25 @@
+mfc대화상자기반 생성 -> 리소스 뷰 dialog
+
+---Dialog창을 만들어보자---
+1. Dialog 대화상자 만들기: ID를 변경             ( IDD_DIALOG1 )
+2. 작성된 대화상자에서 클래스를 추가              ( C1.cpp )
+3. 메인에 변수 추가(작성된 클래스 형으로)         ( C1 m_1; )
+4. include "작성된클래스명.h"
+5. OnInitDialog()함수에 변수.Create(IDD,this);  ( m_1.Create(IDD_DIALOG_1,this); )
+6. 버튼에등록: 변수.ShowWindows(SW_SHOW);       ( m_1.ShowWindow(SW_SHOW); )
+
+
+ON_BN_CLIKED 정의되어있지않습니다 오류 -> #include "resource.h" -> 좀이따 지워도 됬음 일시적인 오류인듯
+
+---회원가입 버튼 코드
+  UpdateData();				          	// 컨트롤에 입력된 텍스트를 변수에 넣기
+	m_strinfo.Append(m_strName);
+	m_strinfo.Append(_T("\r\n"));	// 줄바꿈
+	m_strName.Empty();
+	UpdateData(false);			    	// 컨트롤의 내용 지우기
+
+
+---계산기 코드
+  UpdateData();				
+	m_ans = m_first + m_second;
+	UpdateData(false);				

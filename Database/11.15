@@ -1,0 +1,158 @@
+start with, connect by PRIOR
+level
+
+
+DML 시작
+
+데이터 삽입 기본
+insert into
+values();
+
+테이블의 구조만 복사
+create table copy_departments
+as select * from departments where 1=2;
+  where 1=2 -> 1은 2가 아니기때문에 조건에 맞는데이터는 없어서 테이블의 구조만 가져옴
+
+--271해당되는 manager_id, location_id 를 그대로 가져와서 insert
+--department_id = 273,department_name = 'Sample_Dept'
+insert into copy_departments
+select 273,'Sample_Dept',
+        manager_id,location_id
+from departments
+where department_id = 271;
+
+delete from departments       (from 생략해도 동작함)
+where department_name = 'Sample_Dept';
+
+
+
+--------------------------------------------------------------------------------
+-- 실습예제 11.6
+--        departments 테이블에 department_name이 'Sample_Dept'인 행을 찾아 
+--        manager_id가 201, location_id가 1800으로 변경하시오.
+--------------------------------------------------------------------------------
+update copy_departments
+set manager_id = 201, location_id = 1800
+where department_name = 'Sample_Dept';
+
+
+--11.2.2 update문 : 서브쿼리 사용 수정
+--------------------------------------------------------------------------------
+-- 실습예제 11.7 
+--       departments 테이블에서 department_id가 40인 manager_id와 location_id의
+--       데이터값을 찾아내어 department_name이 'Sample_Dept'인 행의 
+--       manager_id와 location_id를 찾아낸 데이터값으로 변경하시오.
+--------------------------------------------------------------------------------
+update departments
+set (manager_id,location_id)=
+    (select manager_id,location_id
+     from departments
+     where department_id = 40
+    )
+where department_name = 'Sample_Dept';
+
+--11.3. delete문
+--11.3.1 단일행 삭제
+--------------------------------------------------------------------------------
+--실습예제 11.7
+--        departments 테이블에서 dempartment_name이 
+--        'Sample_Dept'인 행을 삭제하시오.
+---------------------------------------------------
+delete from departments
+where department_name = 'Sample_Dept';
+
+select * from departments;
+--11.3.1 서브쿼리 이용 삭제
+--------------------------------------------------------------------------------
+--실습예제 11.8
+--        departments 테이블에서 dempartment_name이 
+--        'Sample_Dept'인 행을 모든행을 삭제하시오.
+--------------------------------------------------------------------------------
+delete from copy_departments
+where department_name = 
+    (select department_name
+     from copy_departments
+     where department_name = 'Sample_Dept'
+     );
+     
+--실습예제 11.8
+--        departments 테이블에서 dempartment_name이 
+--        'IT'인 행을 모든행을 삭제하시오.
+--------------------------------------------------------------------------------
+delete from copy_departments
+where department_id in 
+    (select department_id
+     from copy_departments
+     where department_name = 'IT'
+     );
+
+select * from copy_departments;
+--------------------------------------------------------------------------------
+--실습예제 11.9
+--        Copy_departments 테이블에서 사원이 소속되어 있는 않은 모든 부서를 삭제하시오.
+--------------------------------------------------------------------------------
+delete from copy_departments
+where manager_id is null;
+
+
+drop table copy_departments;
+
+
+
+
+
+
+
+
+
+*** lect 10 ***
+--------------------------------------------------------------------------------
+-- Quiz 10.4 : LEVEL 의사열(pseudo column)을  사용하는 대신
+--  각 사원의 전체 직속 계층을 표현하는 함수(sys_connect_by_path())이용하여 출력
+-- 조회 형태
+--        King
+--        King-Cambrault
+--        King-Cambrault-Bates
+--        King-Cambrault-Bloom
+--------------------------------------------------------------------------------
+select e.last_name||' report to '||PRIOR last_name Work,
+        LTRIM(sys_connect_by_path(e.last_name,'-'),'-') sys
+from employees e
+start with e.last_name = 'King'
+connect by PRIOR e.employee_id = e.manager_id;
+
+--------------------------------------------------------------------------------
+
+ --------------------------------------------------------------------------------
+-- Quiz 10.5 : Quiz 9.9결과에서  'Kochhar'를 제외하고 출력하시오
+-- 조회 형태
+--        King
+--        King-Cambrault
+--        King-Cambrault-Bates
+--------------------------------------------------------------------------------
+select e.last_name||' report to '||PRIOR last_name Work,
+        LTRIM(sys_connect_by_path(e.last_name,'-'),'-') sys
+from employees e
+start with e.last_name = 'King'
+connect by PRIOR e.employee_id = e.manager_id and e.last_name <> 'Kochhar'
+order siblings by e.last_name;
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- Quiz 10.6 :  조회형태를 사원의 이름, 부서명, 업무를 연결하여 출력하시오
+-- 조회 형태
+--  WORKDETAIL
+--    King job is AD_PRES, department_name is Executive
+--        Cambrault job is SA_MAN, department_name is Sales
+--            Bates job is SA_REP, department_name is Sales
+--            Bloom job is SA_REP, department_name is Sales   
+--------------------------------------------------------------------------------
+select lpad(' ',4*(level-1))||e.last_name||' job is '||e.job_id||
+        ', department_name is '||d.department_name Workdetail
+from employees e, departments d
+where e.department_id = d.department_id
+start with e.last_name = 'King'
+connect by PRIOR e.employee_id = e.manager_id;
+
+--------------------------------------------------------------------------------

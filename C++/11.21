@@ -1,0 +1,113 @@
+리소스 뷰 -> dialog -> 속성 -> 글꼴
+
+메인dlg에 1번창,2번창으로 연결되는 버튼 만들기
+
+maindlg.cpp -> OnInitDialog에다가
+// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	m_test1.Create(IDD_DIALOG1, this);
+	m_test2.Create(IDD_DIALOG2, this);
+
+
+메인dlg.cpp
+버튼눌렀을때 dlg창 띄우기 
+
+void CMy1121Dlg::OnBnClickedButton1()
+{
+	m_test1.ShowWindow(SW_SHOW);
+}
+
+
+* dlg1 이름,나이 입력후 결과에 출력하기
+이름,나이 edit controll, 입력 button에 변수추가
+CTest1.cpp 수정
+
+
+void CTest1::OnBnClickedButton1()
+{
+	UpdateData(true);					          	//컨트롤의 데이터를 변수에 넣기
+	if (m_name.IsEmpty())
+		return;
+	m_res.Append(m_name);                 // m_res.Append(_T("이름: ") + m_name + ", 나이: ");  이름: , 나이: 출력하기
+	m_res.AppendFormat(_T(" %d"),m_age);	//숫자를 문자형식으로 넣어주기
+	m_res.Append(_T("\r\n"));			      	//줄바꿈
+	m_name.Empty();							          //name 비우기
+	m_age = 0;
+	UpdateData(false);					        	//변수의 데이터를 컨트롤로 반환
+}
+
+
+dodataexchange -> 컨트롤과 변수의 데이터를 왔다갔다
+
+
+* 이름,성별,관심분야 데이터 넣어서 출력하기   (성별은 라디오버튼)
+처음만든라디오버튼(IDD_RADIO1)에 그룹을 true로 해줘야 라디오버튼들중 하나만 선택가능
+DoDataExchange 에서 라디오버튼은 DDX_Radio
+
+--CTest2.cpp
+void CTest2::OnBnClickedButton1()
+{
+	LPCTSTR gender[2] = { _T("여성"), _T("남성") };
+	UpdateData(true);
+	if (m_uname.IsEmpty())
+		return;
+	/*m_info.Append(m_uname);
+	m_info.Append(gender[m_female]);
+	m_info.Append(m_interest);*/
+	m_info.Append(_T("이름: ") + m_uname + ", 성별: " + gender[m_female] + ", 관심분야: " + m_interest);
+	m_info.Append(_T("\r\n"));
+	m_female = 0;
+	m_uname.Empty();
+	m_interest.Empty();
+	UpdateData(false);
+}
+
+
+* 관심분야 체크박스로 항목 4개만들어서 체크한것들 출력되게하기
+
+
+헤더에
+int* m_flag;
+
+-CTest2.cpp
+-생성자 
+	, m_flag(NULL)
+{
+	m_flag = new int[4];
+}
+
+- DoDataExchange
+int i;
+for(i=0; i<4; i++)
+		DDX_Check(pDX, IDC_CHECK_APP+i, m_flag[i]);
+
+
+* 3교시 CTest2 버튼코드 
+void CTest2::OnBnClickedButton1()
+{
+	int i;
+	bool comma = false;
+	LPCTSTR gender[2] = { _T("여성"), _T("남성") };
+	LPCTSTR kind[4][2] = { {_T(""),_T("앱 개발")},
+							{_T(""),_T("네트워크 보안")},
+							{_T(""),_T("데이터베이스")},
+							{_T(""),_T("임베디드")} };
+	UpdateData(true);
+	if (m_uname.IsEmpty())
+		return;
+	m_info.Append(_T("이름: ") + m_uname + ", 성별: " + gender[m_female] + ", 관심분야: " + m_interest);
+	for (i = 0; i < 4; i++) {
+		if (comma && m_flag[i])
+			m_info.Append(_T(", "));
+		m_info.Append(kind[i][m_flag[i]]);
+		comma = comma || m_flag[i];
+		m_flag[i] = 0;
+	}
+	m_info.Append(_T("\r\n"));
+	m_female = 0;
+	m_uname.Empty();
+	m_interest.Empty();
+	UpdateData(false);
+}
+
+
+체크박스 2개 추가 -> 배열크기들 늘려주고 kind[6][2]로 바꾸고 데이터 추가해주면 끝

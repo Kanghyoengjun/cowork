@@ -1,0 +1,207 @@
+instance of
+
+
+5장상속 34쪽 예제 ★★
+
+class Person { }
+class Student extends Person { }
+class Researcher extends Person { }
+class Professor extends Researcher { }
+public class InstanceOfEx {
+
+	static void print(Person p) {
+		if(p instanceof Person)
+			System.out.print("Person ");
+		if(p instanceof Student)
+			System.out.print("Student ");
+		if(p instanceof Researcher)
+			System.out.print("Researcher ");
+		if(p instanceof Professor)
+			System.out.print("Professor ");
+		System.out.println();
+	}
+	
+	public static void main(String[] args) {
+		Person p1 = new Person();
+		System.out.print("new Person() --> ");
+		print(p1);
+		
+		Student s1 = new Student();						// 업캐스팅
+		System.out.print("new Student() --> ");
+		print(s1);
+		
+		Researcher r1 = new Researcher();				// 업캐스팅
+		System.out.print("new Researcher() --> ");
+		print(r1);
+		
+		System.out.print("new Student() --->");			// 업캐스팅
+		print(new Student());
+			
+		System.out.print("new Student() -> "); print( new Student() );
+		System.out.print("new Researcher() -> "); print( new Researcher() );
+		System.out.print("new Professor() -> "); print( new Professor() );
+		}
+	}
+
+
+* 오버라이딩
+class A
+  void f()
+class B extends A
+  void f()
+  
+B b = new B()
+b.f()                 -> 자식의 f 호출
+
+A a = new B()
+a.f()                 -> 자식의 f를 호출(오버라이딩)(동적바인딩)
+
+ 동적 바인딩(dynamic binding)이란?
+ 실행할 메소드를 컴파일 할 때(compile time)에 결정하지 않고
+  실행 할 때(run time)에 결정하는 것
+ 자바는 동적 바인딩을 통해서 서브클래스에 구현되어
+  있는 오버라이딩 메소드가 항상 실행되도록 보장
+
+
+5장상속 40쪽 예제 ★★
+
+class Shape { 			// 도형의 슈퍼 클래스
+	public void draw() {
+		System.out.println("Shape");
+	}	
+}
+
+class Line extends Shape {
+	public void draw() { // 메소드 오버라이딩
+		System.out.println("Line");
+	}
+}
+
+class Rect extends Shape {
+	public void draw() { // 메소드 오버라이딩
+		System.out.println("Rect");
+	}
+}
+
+class Circle extends Shape {
+	public void draw() { // 메소드 오버라이딩
+		System.out.println("Circle");
+	}
+}
+
+public class MethodOverridingEx {
+	static void paint(Shape p) {   // Shape을 상속받은 객체들이	 매개 변수로 넘어올 수 있음
+		p.draw(); 				   // p가 가리키는 객체에 오버라이딩된 draw() 호출.	동적바인딩
+	}
+	public static void main(String[] args) {
+		Line line = new Line();
+		paint(line); 			// Line의 draw() 실행. "Line" 출력
+		
+		paint( new Shape() );   // Shape의 draw() 실행. "Shape" 출력
+		paint( new Line() );    // 오버라이딩된 메소드 Line의 draw() 실행
+		paint( new Rect() );	// 오버라이딩된 메소드 Rect의 draw() 실행
+		paint( new Circle() );  // 오버라이딩된 메소드 Circle의 draw() 실행
+	}
+}
+
+
+paint(){
+  draw()
+}
+draw(){}
+
+업캐스팅,오버라이딩하면
+자식.paint() 했을 때 자식.draw 출력
+
+super.draw()
+super 사용하면 정적바인딩으로 부모꺼 출력
+
+ 추상 메소드(abstract method)
+ abstract로 선언된 메소드, 메소드의 코드는 없고 원형만 선언
+abstract public String getName(); // 추상 메소드
+abstract public String fail() { return "Good Bye"; } // 추상 메소드 아님. 컴파일 오류
+
+ 추상 클래스(abstract class)
+ 추상 메소드를 가지며, abstract로 선언된 클래스
+abstract class Shape {
+  public Shape() { ... }
+  public void edit() { ... }
+  abstract public void draw(); // 추상 메소드
+}
+
+ 추상 메소드 없이, abstract로 선언한 클래스
+abstract class JComponent {
+  String name;
+  public void load(String name ) {
+    this.name= name;
+  }
+}
+
+* 추상 클래스는 온전한 클래스가 아니기 때문에 인스턴스를 생성할 수 없음(객체 생성 불가)
+(레퍼런스 선언은 가능)
+JComponent p;             // 오류 없음. 추상 클래스의 레퍼런스 선언
+p = new JComponent();     // 컴파일 오류. 추상 클래스의 인스턴스 생성 불가
+Shape obj = new Shape();  // 컴파일 오류. 추상 클래스의 인스턴스 생성 불가
+
+ 추상 클래스 상속
+ 추상 클래스를 상속받으면 추상 클래스가 됨
+ 서브 클래스도 abstract로 선언해야 함
+
+abstract class A {                     // 추상 클래스
+abstract public int add(int x, int y); // 추상 메소드
+}
+abstract class B extends A {           // 추상 클래스
+public void show() { System.out.println("B"); }
+}
+
+ 추상 클래스 구현
+ 서브 클래스에서 슈퍼 클래스의 모든 추상 메소드를 오버라이딩하여 실행 가능한 코드로 구현하는 것
+ 추상 클래스를 구현한 서브 클래스는 추상 클래스가 아님
+ 추상클래스를 구현한 서브 클래스는 인스턴스를 생성할 수 있음
+
+class C extends A {                          // 추상 클래스 구현. C는 정상 클래스
+  @Override
+public int add(int x, int y) { return x+y; } // 추상 메소드 구현. 오버라이딩
+public void show() { System.out.println("C"); }
+}
+...
+C c = new C();      // 정상
+
+
+ 추상 클래스의 목적
+ 상속을 위한 슈퍼 클래스로 활용하는 것
+ 추상 클래스는 추상 메소드를 통해 서브 클래스가 구현할 메소드의 원형을 알려주는 역할
+ 다형성 실현
+
+* annotation
+컴파일러에게 알려주는 주석
+ @Override
+ 
+ 
+System.out.println(c.avg(new int[] {2,14,18,46}));      // 배열을 이렇게 선언해서 매개변수로 넣을수있다.
+
+* 상속은 클래스만들때 슈퍼클래스에서 Browse로 편하게 가능
+
+217p Check time
+  13 - 14 - 15 - 9 - 3 - 10 - 5 - 16 - 종료
+
+5-9 1)
+draw();
+
+5-9 2)
+super.draw();
+
+222p Check time
+abstract
+틀린거 X
+void f(){ System.out.println("객체 생성"); }
+
+5-11 1)
+2,4
+
+5-11 2)
+Circle abstract빼고 draw 구현
+
+
+인터페이스가 왜 필요하지??
+여러명이 같이개발

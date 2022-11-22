@@ -1,0 +1,62 @@
+https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=jobberbell&logNo=221165759217
+
+집가서 할거
+1.톰캣서버      tomcat.apache.org (tomcat9)   64bit windows.zip    8080
+2.이클립스 Enterprise Edition(EE)
+3.DBMS(MySQL)
+
+configure tomcat -> start
+
+웹서버 -> web 관련 file
+웹서버 + jsp container -> WAS (web application server)
+
+dynamic web project > apache tomcat > tomcat folder browse
+src > webapp > new > jsp file
+
+
+
+
+--------------------------------------
+* LoginForm.jsp
+<body>
+<form action="LoginCheck.jsp" method="post">
+		아이디 <input type="text" name="id"><br>
+		비밀번호 <input type="password" name="pwd"><br>
+		<input type="submit" value="로그인">
+	</form>
+</body>
+----------------------------
+* LoginCheck.jsp
+<body>
+<% 
+	String id = request.getParameter("id");
+	String pwd = request.getParameter("pwd");
+	
+	if(id.equals("test") && pwd.equals("1234")){
+	session.setAttribute("s1","박준");				//세션 객체 생성 및 저장
+	response.sendRedirect("LoginedMain.jsp");
+	}
+	else{
+	response.sendRedirect("ReLoginForm.jsp");
+	}
+%>
+</body>
+------------------------------
+* LoginedMain.jsp
+<body>
+<%
+	String s1 = (String)session.getAttribute("s1");
+%>
+<%=s1 %>님 환영합니다.
+<a href="Logout.jsp">로그아웃</a>
+</body>
+-------------------------------
+* Logout.jsp
+<body>
+<%
+	//세션 객체를 소멸한다.
+	session.removeAttribute("s1");
+	response.sendRedirect("LoginForm.jsp");
+%>
+</body>
+---------------------------------

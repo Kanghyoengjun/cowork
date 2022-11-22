@@ -1,0 +1,93 @@
+트랜잭션
+트랜잭션의 특징
+-일반적으로 DML 실행과 실행에 대한 커밋 롤백 단계까지를 트랜잭션이라고 부름
+-실무에서는 데이터베이스에서 SELECT 문으로 데이터를 조회하고 DML 을 실행하여 종료하는 과정까지를 트랜잭션이라고 부름
+-트랜잭션의 성공과 실패 여부
+  ‘트랜잭션이 성공했다’와 ‘트랜잭션이 철회되었다’ 라고 표현
+-트랜잭션은 정상적인 상황이라면 마지막 단계에서 커밋이나 롤백으로 종료됨
+
+커밋된 이후에는 되돌릴 수 없다.
+
+* 동시성 제어 불일치 현상
+동시에 여러명이 데이터베이스 작업을 할때 최종값이 의도한 값과 다르게 되는 현상.
+
+* 동시성 제어 기법
+락킹(locking): 트랜잭션이 데이터에 lock을 설정하면 다른 트랜잭션은 해당 데이터가 unlock 될 때까지 접근,수정,삭제 불가능.
+타임스탬프(timestamp): 시스템에서 생성하는 고유번호인 타임스탬프를 트랜잭션에 부여함으로써 트랜잭션간의 접근 순서를 미리 정함.
+적합성(validation)검증: 먼저 트랜잭션을 수행하고 트랜잭션을 종료할 때 적합성을 검증하여 데이터베이스에 최종반영.
+
+* view
+create or replace view vw_emp_detail     -- view 갱신하기
+as select e.*, e.first_name||' '||e.last_name 사원이름,
+          j.job_title 직무명, d.department_name 부서명
+from employees e, jobs j, departments d
+where e.department_id = d.department_id
+and e.job_id = j.job_id;
+
+drop view vw_emp_detail;
+
+
+* 테이블스페이스 만들고 DB사용자 계정생성, 권한부여
+
+-- 1.tablespace 작업
+create tablespace cbook datafile
+'D:\cdbproject\oradata\myoracle\cbookts.dbf' size 100M
+autoextend on next 5M;
+
+-- 2.DB사용자 계정 생성
+create user cbook identified by cbook1234
+default tablespace cbook
+temporary tablespace temp;
+
+-- 3.사용자 권한 부여
+grant select on book to cbook; -- cbook에게 book 테이블을 select할수있는 권한만 부여
+grant dba to cbook;            -- 모든권한부여
+
+-- 4.role 생성
+create role programmer;
+
+-- 5.role이 가질 수 있는 권한부여
+grant create any table, create any view to programmer;
+
+-- 6.role 권한을 사용자에게 부여
+grant programmer to cbook;
+
+* alter table 연습
+CREATE TABLE NewBook (
+bookid NUMBER(2) PRIMARY KEY,
+bookname VARCHAR2(40),
+publisher VARCHAR2(40),
+price NUMBER(8)
+);
+
+-- table 속성 추가
+alter table NewBook add isbn varchar2(13);
+
+-- table 속성 변경
+alter table NewBook modify isbn number;
+
+-- table 속성 삭제
+alter table NewBook drop column isbn;
+
+
+* 테이블 내용 삭제하기
+  DML                            DDL                                          DDL
+DELETE                        TRUNCATE                                       DROP
+데이터만 삭제               테이블 구조 남겨두고 데이터만 삭제           테이블 포함 전부삭제
+
+truncate table NewBook;
+drop table NewBook;
+
+*커밋,롤백
+이전작업 롤백
+rollback;
+작업저장 (커밋)
+commit;
+
+
+* 인덱스 생성
+실행계획 f10
+
+--    12-5 . Book 테이블의 bookname 열을 대상으로 비 클러스터 인덱스    
+--           ix_Book을 생성
+create index ix_book on book (bookname);

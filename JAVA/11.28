@@ -1,0 +1,40 @@
+-인터페이스 선언
+public interface SerialDriver
+{
+  상수,추상메소드
+  Java8 에서 default 메소드 포함 (기업의 요구사항)
+  Java9 에서 private, static 메소드 포함
+}
+
+-인터페이스는 멤버변수 선언 불가
+-인터페이스는 객체생성 불가
+
+인터페이스에서 생략가능한거
+interface PhoneInterface{
+ public static final int t = 10000;         상수 필드, public static final 생략가능
+ public abstract void send();               추상 메소드, public abstract 생략가능
+ public default void print(){               default 메소드, public 생략가능
+    System.out.print("abc");
+  }
+}
+
+인터페이스 간에 상속,다중상속 가능
+interface mobile extends phone{
+  추상메소드
+}
+interface mobile extends phone,mp3{
+  추상메소드
+}
+
+-인터페이스는 반드시 누군가 구현해줘야한다
+implements 키워드
+class phone implements phoneinterface {}
+
+
+
+----------------------------------------------------
+과제
+4,5장 실습문제
+p234 ~ 238
+1,2,3,4,5,보너스1
+p228 Open Challenge

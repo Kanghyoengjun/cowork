@@ -1,0 +1,111 @@
+ListBox, ComboBox 추가
+CComboBox m_local;
+CListBox m_list;
+
+---------------------------------------------------------
+--CMy1128Dlg
+, m_name(_T(""))
+	, m_gender(0)
+	, m_result(_T(""))
+  
+
+
+--DoDataExchange
+DDX_Text(pDX, IDC_EDIT1, m_name);
+	DDX_Radio(pDX, IDC_RADIO1, m_gender);
+	DDX_Text(pDX, IDC_EDIT2, m_result);
+	DDX_Control(pDX, IDC_COMBO1, m_local);
+	DDX_Control(pDX, IDC_LIST1, m_list);
+
+
+
+--OnInitDialog
+LPCTSTR local[5] = { _T("서울"),_T("대전"), _T("부산"), _T("광주"), _T("제주") };
+	for (int i = 0; i < 5; i++) {
+		m_local.AddString(local[i]);
+	}
+	m_local.SetCurSel(0);		// 0번에 커서를 위치
+  
+  
+  
+
+void CMy1128Dlg::OnBnClickedButton1()
+{
+	LPCTSTR gender[2] = { _T("남성"),_T("여성") };
+	UpdateData(true);
+	m_data.Append(m_name + ", ");
+	m_data.Append(gender[m_gender]);
+	m_data.Append(_T(", 나이= "));
+	m_data.AppendFormat(_T("%d"), m_age);
+	m_data.Append(_T("\r\n"));
+	m_result.Append(m_data);
+	m_list.AddString(m_data);
+	m_name.Empty();
+	m_data.Empty();
+	m_gender = 0;
+	UpdateData(false);
+  
+  
+  void CMy1128Dlg::OnCbnSelchangeCombo2()
+{
+	m_age = 63 - m_year.GetCurSel();		// 나이 계산
+	//m_selectitem = m_local.GetCurSel();
+}
+
+
+
+---임의의 수 (시작값,마지막값,갯수) 리스트박스에 출력
+-----------------------------------------------------
+m_dlg2::m_dlg2(CWnd* pParent /*=nullptr*/)
+	: CDialogEx(IDD_DIALOG1, pParent)
+	, m_start(0)
+	, m_final(0)
+	, m_cnt(0)
+{
+
+}
+
+
+
+void m_dlg2::DoDataExchange(CDataExchange* pDX)
+{
+	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_EDIT1, m_start);
+	DDX_Text(pDX, IDC_EDIT2, m_final);
+	DDX_Text(pDX, IDC_EDIT3, m_cnt);
+	DDX_Control(pDX, IDC_LIST1, m_list2);
+}
+
+
+
+void m_dlg2::OnBnClickedButton1()
+{
+  UpdateData(true);
+	srand(time(NULL));
+	m_list2.ResetContent();     // 내용비우기
+	CString str;
+	for (int i = 0; i < m_cnt; i++) {
+		str.Format(_T("%d"), rand() % (m_final-m_start) + 1);
+		m_list2.AddString(str);
+	}
+	UpdateData(false);
+}
+
+
+
+------------------------------------------------------
+창2개로 입,출력
+
+
+void CMy11282Dlg::OnBnClickedButton1()
+{
+	CTest1 dlg;
+	if (dlg.DoModal() == IDOK)
+	{
+		m_data.Empty();
+		m_data.Append(dlg.m_name + " - ");
+		m_data.Append(dlg.m_addr);
+		m_list.AddString(m_data);
+		UpdateData(false);
+	}
+}

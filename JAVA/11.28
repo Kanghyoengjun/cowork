@@ -31,10 +31,96 @@ implements 키워드
 class phone implements phoneinterface {}
 
 
-
 ----------------------------------------------------
 과제
 4,5장 실습문제
 p234 ~ 238
 1,2,3,4,5,보너스1
 p228 Open Challenge
+----------------------------------------------------
+
+--package
+디렉토리가다르면 파일이름이 같아도 합쳤을때 서로 다른 파일로 취급
+
+서로 관련된 클래스와 인터페이스를 컴파일한 클래스 파일(.class)들을 묶어 놓은 디렉토리
+패키지는 jar 파일로 압축
+
+--module
+패키지와 이미지 등의 자원을 모아 놓은 컨테이너
+JDK 9부터 패키지들을 모듈단위로 묶어 제공
+하나의 모듈을 하나의 .jmod 파일에 저장
+
+--모듈의 현실
+ 복잡한 개념
+ 큰 자바 응용프로그램에는 개발, 유지보수 등에 적합
+현실적으로 모듈로 나누어 자바 프로그램을 작성할 필요 없음
+
+
+package가 import 보다 먼저임
+
+JRE - 자바가상머신, 자바API
+
+--자바 모듈화의 목적
+자바 컴포넌트들을 필요에 따라 조립하여 사용하기 위함
+컴퓨터 시스템의 불필요한 부담 감소
+
+package이름 팁(UNIQUE)
+kr.ac.seoil.se.khj
+
+
+---JDK의 주요 패키지
+-초보에서 중수로 진화하려면 이 부분이 가장 중요함!!!
+java.lang
+java.util
+
+-Object 클래스
+ 모든 자바 클래스는 반드시 Object를 상속받도록 자동 컴파일
+ 최상위 클래스, 모든 클래스의 수퍼 클래스
+ 모든 클래스가 상속받아 사용할 공통 기능(메소드) 포함
+ java.lang 패키지에 속함
+*boolean equals(object obj)     obj가 가리키는 객체와 현재 객체를 비교하여 같으면 true 리턴
+*String toString()              현 객체에 대한 문자열 표현을 리턴(객체를 문자열로 표현할 때)
+
+    객체가 생성될 때 객체를 유일하게 식별할 수 있게 부여되는 정수 id 값
+		System.out.println(p.hashCode());
+		Class 객체의 getName() 메소드는 객체의 클래스 이름 리턴
+		System.out.println(p.getClass().getName());
+		객체를 문자열로 변환하여 리턴
+		System.out.println(p.toString());
+
+
+
+ 컴파일러에 의한 toString() 자동 변환
+   ‘객체 + 문자열’ -> ‘객체.toString() + 문자열’로 자동 변환
+   객체를 단독으로 사용 하는 경우 -> 객체.toString()으로 자동변환
+
+자바는 거의 모든 클래스를 만들 때 toString() 메소드를 오버라이딩 한다
+@Override
+	public String toString() {
+		return "Point(" + x + "," + y + ")";
+	}
+  
+  
+Point p = new Point(2,3);
+Point a = new Point(2,3);
+Point r = p;
+if(p==a)                          //false
+			System.out.println("p==a");
+if(p==r)                          //true
+			System.out.println("p==r");
+
+
+String a = new String(“Hello”);
+String b = new String(“Hello”);
+if( a == b )                      //false
+System.out.println(“a==b”);     
+if( a.equals(b) )                 //true
+System.out.println(“a와 b는 둘 다 Hello 입니다.”);
+
+★★★너무너무중요함!!!
+@Override
+public boolean equals(Object obj) {
+		Point p = (Point)obj;
+		if(x==p.x && y==p.y) return true;
+		else return false;
+}

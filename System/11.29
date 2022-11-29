@@ -1,0 +1,89 @@
+mysql
+다 next
+root - admin1234
+
+mysql connector
+webapp - lib 에다가 connector 넣기
+
+
+데이터베이스 연결
+  <%
+	Connection conn = null;
+	try{
+	  String url = "jdbc:mysql://localhost:3306/userdb";
+	  String dbid = "root";
+	  String dbpwd = "admin1234";
+	  
+	  Class.forName("com.mysql.jdbc.Driver");
+	  conn = DriverManager.getConnection(url,dbid,dbpwd);
+	  out.println("데이터베이스연결 성공");
+ 	 }catch(Exception e){
+   		 e.printStackTrace();
+   		 out.println("데이터베이스연결 실패");
+ 	 }
+%>
+
+
+
+	<h2>회원가입</h2>
+	<form action=MemberJoin.jsp method=get>
+	<table width=400 border=20>
+		<tr height=40>
+			<td width=150>아이디</td>		
+			<td width=250><input type=text name=id></td>
+		</tr>
+		<tr height=40>
+			<td width=150>비밀번호</td>
+			<td width=250><input type=password name=pwd></td>
+		</tr>
+		<tr height=40>
+			<td width=150>이름</td>
+			<td width=250><input type=text name=name></td>
+		</tr>
+		<tr align=center>
+			<td colspan=2><input type=submit value=가입></td>
+		</tr>
+	</table>
+	</form>
+  
+  
+  
+  
+  <%
+	//폼으로부터 입력받은 값을 받아옴
+	request.setCharacterEncoding("UTF-8");
+	String id = request.getParameter("id");
+	String pwd = request.getParameter("pwd");
+	String name = request.getParameter("name");
+	out.println("id: "+ id);
+	out.println("pwd: "+ pwd);
+	out.println("name: "+ name);
+	
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	try{
+		//DB 연결 코드
+		String url = "jdbc:mysql://localhost:3306/userdb";
+		String dbid = "root";
+		String dbpwd = "admin1234";
+		Class.forName("com.mysql.jdbc.Driver");
+		conn = DriverManager.getConnection(url,dbid,dbpwd);
+		out.println("연결완료");
+		pstmt = conn.prepareStatement("insert into usertb values(?,?,?)");
+		pstmt.setString(1,id);
+		pstmt.setString(2,pwd);
+		pstmt.setString(3,name);
+		int res = pstmt.executeUpdate();
+		out.println("res = " + res);
+    ResultSet rs = pstmt.executeQuery("select * from usertb;");
+		while(rs.next()){
+			String id1 = rs.getString("id");
+			out.println(id1);
+		}
+	}catch(IOException e){
+		out.println("연결실패");
+	}finally{
+		pstmt.close();
+		conn.close();
+	}
+%>

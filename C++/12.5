@@ -1,0 +1,79 @@
+---리스트 컨트롤(list control)
+
+void CMy125Dlg::OnBnClickedButton1()
+{
+	//열 이름 추가
+	m_listCtrl.InsertColumn(1, _T("이름"), LVCFMT_CENTER, 165,1);
+	m_listCtrl.InsertColumn(2, _T("성적"), LVCFMT_CENTER, 165,2);
+	m_listCtrl.InsertColumn(3, _T("점수"), LVCFMT_CENTER, 165,3);
+
+	//항목 추가
+	m_listCtrl.InsertItem(1, _T("강형준"));
+	m_listCtrl.InsertItem(2, _T("하늘"));
+	m_listCtrl.InsertItem(3, _T("주희"));
+
+
+	//하위 항목 추가
+	m_listCtrl.SetItemText(0, 1, _T("100"));
+	m_listCtrl.SetItemText(0, 2, _T("SSS"));
+	m_listCtrl.SetItemText(1, 1, _T("62"));
+	m_listCtrl.SetItemText(1, 2, _T("E"));
+	m_listCtrl.SetItemText(2, 1, _T("85"));
+	m_listCtrl.SetItemText(2, 2, _T("G"));
+}
+
+
+---컬럼 추가
+void CMy125Dlg::OnBnClickedButton2()
+{
+	const int ALIGN[3] = { LVCFMT_LEFT,LVCFMT_RIGHT, LVCFMT_CENTER, };
+	int align;
+	align = ALIGN[m_align.GetCurSel()];
+	UpdateData();
+	m_listCtrl.InsertColumn(m_nCol, m_name, align, m_length);
+	m_nCol++;
+}
+
+
+---데이터 추가
+void CMy125Dlg::OnBnClickedButton3()
+{
+	if (m_nCol > 0)
+	{
+		int count;
+		count = m_listCtrl.GetItemCount();
+		UpdateData();
+		m_listCtrl.InsertItem(count, m_item1);
+		if (m_nCol > 1)
+			m_listCtrl.SetItemText(count, 1, m_item2);
+		if (m_nCol > 2)
+			m_listCtrl.SetItemText(count, 2, m_item3);
+	}
+}
+
+---300p 문제1
+void Cp3001문제Dlg::OnBnClickedButton1()
+{
+	LPCTSTR col[4] = {_T("도서명"),_T("출판사"), _T("가격"), _T("출판년도")};
+	LPCTSTR data[6][4] = { {_T("MFC 프로그래밍"),_T("한빛아카데미"),_T("20000"),_T("2020")},
+						 {_T("운영체제 개론"),_T("정익사"),_T("25000"),_T("2019")},
+					 	 {_T("자바 프로그래밍 실무"),_T("세한출판사"),_T("23000"),_T("2023")},
+						 {_T("자료구조 기초"),_T("스마트아이티"),_T("22000"),_T("2012")},
+					 	 {_T("윈도우즈 API 실무"),_T("도서출판 한라"),_T("21000"),_T("2022")},
+						 {_T("쉽게배우는 MFC"),_T("도서출판 한빛"),_T("28000"),_T("2015")}
+						 };
+
+	for (int k = 0; k < 4; k++)
+	{
+		lctrl.InsertColumn(k, col[k], LVCFMT_CENTER, 180, k+1);
+	}
+	
+	for (int i = 0; i < 6; i++) 
+	{
+		lctrl.InsertItem(i+1, data[i][1]);
+		for (int j = 0; j < 4; j++)
+		{
+			lctrl.SetItemText(i, j, data[i][j]);
+		}
+	}
+}

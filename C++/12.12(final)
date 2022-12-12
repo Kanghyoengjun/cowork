@@ -6,13 +6,22 @@
 레스터연산 X
 
 *코딩 2문제
-257p 8번 약간변형
+257p 8번
 dlalog 추가로 만들기 -> 클래스추가해야함
+void CTest1::OnBnClickedButton1()
+{
+	CTest2 ct2;
+	if (ct2.DoModal() == IDOK)
+	{
+		m_lb.AddString(ct2.m_str2);
+	}
+}
+
 
 300p 1번
 데이터 열기 버튼 누르면 버튼이 지워짐 - 버튼변수.ShowWindow(SW_HIDE)
 ListBox (SHOW)
-데이터 INSERT
+데이터 보이기
 ----------------------------------------------
 **5장
 *메뉴와 비트맵 

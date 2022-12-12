@@ -1,0 +1,46 @@
+*기말고사
+12.19   5:00 ~ 5:50   호천관 704호
+5장 메뉴와 비트맵 ~ 7장 대화상자와 컨트롤 2
+
+도형그리기 코딩 X, Accelerator 단축키 X
+레스터연산 X
+----------------------------------------------
+**5장
+*메뉴와 비트맵 
+단일문서, MFC, 생성된 클래스 - APP                  파일입출력 = 클래스 - DOC
+보기 - 클래스 뷰, 리소스 뷰
+view.cpp 에서 작업
+
+
+*메뉴만들기
+리소스 뷰 - 메뉴 - MAINFRAME
+메뉴만들면 ID를 바꿔주기    ex) 원 그리기 ID_CIRCLE
+
+- 메뉴 이벤트처리기 -
+메시지 유형 = COMMAND  (명령어 실행) 
+클래스목록 = view
+
+-선그리기-
+move to, line to
+
+
+*비트맵
+비트맵 이미지 가져오려면 BOOL BitBlt() 함수
+SRCCOPY - 그림을 그대로 나타냄
+SRCPAINT - 배경색과 그림 색상을 or 연산한 그림
+SRCAND - 배경색과 그림 색상을 AND 연산한 그림
+
+*213p 요약
+---------------------------------------------
+**6장
+대화상자 기반
+
+*Dialog
+button, edit control, check box, radio button .....
+
+*UpdateData(true or false)   default = true    0,1
+대화상자에 있는 컨트롤과 변수 사이에 값을 주고받음
+
+*DoDataExchange (DDX)
+DDX_Text(pDX, IDC_EDIT_NAME, 변수이름);  - 문자열
+DDX_Control(//)

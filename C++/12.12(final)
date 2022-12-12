@@ -35,12 +35,33 @@ SRCAND - 배경색과 그림 색상을 AND 연산한 그림
 **6장
 대화상자 기반
 
-*Dialog
+*Dialog (리소스뷰)
 button, edit control, check box, radio button .....
 
-*UpdateData(true or false)   default = true    0,1
+dlg.cpp, dlg.h 에서 작업
+
+*UpdateData(true or false)   default = true    0,1 -> (1 = true)
 대화상자에 있는 컨트롤과 변수 사이에 값을 주고받음
 
 *DoDataExchange (DDX)
-DDX_Text(pDX, IDC_EDIT_NAME, 변수이름);  - 문자열
-DDX_Control(//)
+DDX_Text(pDX, ID, 변수이름);  - 문자열
+DDX_Control(//); - 컨트롤
+
+*변수추가
+이름, 타입   ex) m_str, CString
+
+*우클릭 - 이벤트처리추가
+dlg 선택가능
+
+*edit control 에 입력한문자  버튼을 누르면 edit control, listbox 에 넣기
+void CMy12122Dlg::OnBnClickedButton1()
+{
+	//m_btn.ShowWindow(SW_HIDE); // SW_SHOW      HIDE = 버튼숨기기
+	UpdateData();
+	m_res.Append(m_str);
+	m_res.Append(_T("\n"));
+	m_info.Append(m_str);
+	m_list.AddString(m_info);
+	m_str.Empty();
+	UpdateData(0);
+}

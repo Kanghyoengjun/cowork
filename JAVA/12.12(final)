@@ -1,0 +1,29 @@
+**컬렉션 - 크기가 자동 조절되는 컨테이너, 요소의 삽입,삭제에 따른 요소의 위치가 자동 이동
+*제네릭 - 특정 타입만 다루지 않고, 여러 종류의 타입으로 사용할 수 있도록 클래스나 메소드를 일반화시키는 것
+          클래스나 인터페이스 이름에 <E>, <K>, <V> 등 타입매개변수 포함
+          
+
+
+*벡터 - 배열을 가변 크기로 다룰 수 있게하고, 객체의 삽입,삭제,이동이 쉬운 컬렉션(컨테이너) 클래스
+java.util.Vector
+Vector<E>
+Vector<Integer>, Vector<String>      사용가능
+<>에는 객체만 가능 -> int,char,double 등의 기본 타입은 사용불가
+Vector<int> v = new Vector<int>()          <- 사용불가
+Vector<Integer> v = new Vector<Integer>()  <- 사용가능
+
+Vector<Integer> v = new Vector<Integer>(5) 벡터의 초기용량 설정
+
+add(int) 요소 삽입
+get(i)   요소 검색
+
+*Vector<E> 주요 메소드
+-------------------------------------------------------------------------
+boolean add(E element) - 벡터의 맨 뒤에 element 추가
+void add(int index, E element) - 인덱스 index에 element 삽입
+E elementAt(int index) - 인덱스 index의 요소 리턴
+E get(int index) - 인덱스 index의 요소 리턴 , elementAt와 완전히 똑같은 기능
+E remove(int index) - 인덱스 index의 요소삭제
+int size() - 벡터가 포함하는 요소의 개수 리턴
+-------------------------------------------------------------------------
+

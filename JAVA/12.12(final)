@@ -157,6 +157,37 @@ void remove() - 마지막으로 리턴된 요소 제거
 Set<K> keySet() - HashMap에 있는 모든 키를 담은 Set<K> 컬렉션 리턴
 
 
+import java.util.*;
+public class HashMapEx {
+	public static void main(String[] args) {
+		HashMap<String,String> hm = new HashMap<>();
+		
+		hm.put("a", "apple");
+		hm.put("b", "banana");
+		hm.put("c", "carrot");
+		hm.put("d", "dragon");
+		
+		Set<String> k = hm.keySet();
+		Iterator<String> it = k.iterator();
+		while(it.hasNext()) {
+			String key = it.next();
+			String value = hm.get(key);
+			System.out.print("|" + key + "," + value + "| ");
+		}
+		
+		Scanner sc = new Scanner(System.in);
+		for(int i=0; i<3; i++) {
+			System.out.print("\n뭐찾아 >");
+			String s = sc.next();			
+			String val = hm.get(s);
+			if(val == null)
+				System.out.println("없어");
+			else
+				System.out.println(val);
+		}
+		sc.close();
+	}
+}
 
 
 

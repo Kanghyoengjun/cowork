@@ -192,5 +192,34 @@ public class HashMapEx {
 
 
 
+*제네릭 클래스 만들기
+public class MyClass<T,S> {
+	T val1;
+	S val2;
+	
+	void set(T val1, S val2) {
+		this.val1=val1;
+		this.val2=val2;
+	}
+	T get() {
+		return val1;
+	}
+	S get2() {
+		return val2;
+	}
+	
+	public static void main(String[] args) {
+		MyClass<Integer,Integer> i = new MyClass<>();
+		MyClass<String,Integer> s = new MyClass<>();
+		
+		i.set(100,543);
+		System.out.println(i.get() + "," + i.get2());
+		
+		s.set("집가고싶다",808);
+		System.out.println(s.get() + s.get2());
+	}
+}
+
+----------------------------------------------------------------------------------------------
 
 

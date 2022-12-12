@@ -1,9 +1,18 @@
-*기말고사
+***기말고사***
 12.19   5:00 ~ 5:50   호천관 704호
 5장 메뉴와 비트맵 ~ 7장 대화상자와 컨트롤 2
 
 도형그리기 코딩 X, Accelerator 단축키 X
 레스터연산 X
+
+*코딩 2문제
+257p 8번 약간변형
+dlalog 추가로 만들기 -> 클래스추가해야함
+
+300p 1번
+데이터 열기 버튼 누르면 버튼이 지워짐 - 버튼변수.ShowWindow(SW_HIDE)
+ListBox (SHOW)
+데이터 INSERT
 ----------------------------------------------
 **5장
 *메뉴와 비트맵 
@@ -65,3 +74,10 @@ void CMy12122Dlg::OnBnClickedButton1()
 	m_str.Empty();
 	UpdateData(0);
 }
+--------------------------------------------------
+**7장
+
+*ListControl
+InsertColumn
+LVCFMT_LEFT(RIGHT,CENTER)
+

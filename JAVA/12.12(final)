@@ -24,6 +24,67 @@ void add(int index, E element) - 인덱스 index에 element 삽입
 E elementAt(int index) - 인덱스 index의 요소 리턴
 E get(int index) - 인덱스 index의 요소 리턴 , elementAt와 완전히 똑같은 기능
 E remove(int index) - 인덱스 index의 요소삭제
-int size() - 벡터가 포함하는 요소의 개수 리턴
+int size() - 벡터가 포함하는 요소의 개수 리턴    (capacity = 용량)
 -------------------------------------------------------------------------
+int lastElement() - 마지막 요소 리턴
+E removeAllElements() - 모든 요소 삭제
 
+Vector<Integer> v = new Vector<Integer>() - Java 7 이전
+Vector<Integer> v = new Vector<>() - Java 7 이후부터 가능
+var v = new Vector<Integer>() - Java 10 이후부터 가능
+
+
+
+import java.util.Vector;
+class Point{
+	private int x, y;
+	public Point(int x,int y) {
+		this.x=x;
+		this.y=y;
+	}
+	
+	public String toString() {
+		return "(" + x + "," + y + ")"; 
+	}
+}
+
+public class VectorEx {
+
+	public static void main(String[] args) {
+		Vector<Integer> v = new Vector<Integer>();
+		v.add(5);
+		v.add(123);
+		v.add(-2382194);
+		v.add(1,814912985);	
+		System.out.println(v);
+		System.out.println("요소개수:" + v.size());
+		System.out.println("용량:" + v.capacity());
+		for(int i=0; i<v.size(); i++) {
+			int n = v.get(i);
+			System.out.println(n);
+		}
+		
+		Vector<String> vs = new Vector<>();
+		vs.add("Hello");
+		vs.add("How are you");
+		vs.add("Fine");		
+		for(int j=0; j<vs.size(); j++) {
+			String s = vs.get(j);
+			System.out.println(s);
+		}
+		for(String q : vs) {
+			System.out.println(q);
+		}
+		System.out.println(vs);
+		
+		Vector<Point> vp = new Vector<>();
+		vp.add(new Point(2,3));
+		vp.add(new Point(-5,20));
+		vp.add(new Point(30,-12));
+		vp.remove(1);
+		for(int k=0; k<vp.size(); k++) {
+			Point p = vp.get(k);
+			System.out.println(p);
+		}
+	}
+}

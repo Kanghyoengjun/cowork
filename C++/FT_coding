@@ -1,0 +1,30 @@
+---MainDlg에서 회원추가 버튼클릭이벤트
+void CMy11282Dlg::OnBnClickedButton1()
+{
+	CTest1 dlg;
+	if (dlg.DoModal() == IDOK)
+	{
+		m_data.Empty();
+		m_data.Append(dlg.m_name + " - ");
+		m_data.Append(dlg.m_addr);
+		m_list.AddString(m_data);
+		UpdateData(false);
+	}
+}
+
+---maindlg 헤더
+#include "CTest1.h"
+public:
+	afx_msg void OnBnClickedButton1();
+	CString m_data;
+	CListBox m_list;
+
+---CTest1 헤더
+public:
+	CString m_name;
+	CString m_addr;
+  
+  ---CTest1 cpp 에는 DDX_Text말고 안건드림
+  
+  ------------------------------------------------------------------------
+  
